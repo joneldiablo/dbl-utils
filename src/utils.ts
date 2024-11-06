@@ -1,6 +1,5 @@
 import chroma from 'chroma-js';
 import moment from 'moment';
-import plural from "pluralize-es";
 
 //----------------------------------Arrays
 
@@ -73,8 +72,8 @@ export function generateRandomColors(
 
   const formattedColors = Array.from(uniqueColors).map((color) => {
     const [r, g, b] = color.rgb();
-    const adjustedColor = typeof bounds === 'number' || Array.isArray(bounds)
-      ? color.rgb().map((c: number) => transform(c, bounds))
+    const adjustedColor: [number, number, number] = (typeof bounds === 'number' || Array.isArray(bounds))
+      ? color.rgb().map((c: number) => transform(c, bounds)) as [number, number, number]
       : [
         transform(r, bounds.r),
         transform(g, bounds.g),
@@ -91,7 +90,7 @@ export function generateRandomColors(
     } else if (format === 'nrgb') {
       return color.rgb().map((c: number) => c / 255);
     }
-  });
+  }) as Array<string | [number, number, number] | number[]>;
 }
 
 /**
@@ -153,26 +152,6 @@ export function slugify(str: string = ''): string {
 }
 
 /**
- * Pluralizes the given value.
- * @param {number} num - Quantity of the item.
- * @param {string} value - The item to pluralize.
- * @returns {string} The pluralized value.
- */
-export function pluralize(num: number, value: string = ''): string {
-  if (num === 1) return value;
-  switch (value) {
-    case 'Kg':
-    case 'kg':
-      return value + 's';
-    case 'L':
-    case 'l':
-      return value + 'ts';
-    default:
-      return plural(value);
-  }
-}
-
-/**
  * Generates a random four-character string consisting of hexadecimal digits.
  * @returns {string} The random four-character string.
  */
@@ -219,8 +198,8 @@ export function timeChunks(options: { from: string | number, to: string | number
   }
 
   const hoursArray = [];
-  const fromMoment = Number.isInteger(from) ? moment.unix(from) : moment(from);
-  const toMoment = Number.isInteger(to) ? moment.unix(to) : moment(to);
+  const fromMoment = Number.isInteger(from) ? moment.unix(from as number) : moment(from);
+  const toMoment = Number.isInteger(to) ? moment.unix(to as number) : moment(to);
   const diffHours = toMoment.diff(fromMoment, 'hours');
 
   for (let i = 0; i < diffHours; i += step) {

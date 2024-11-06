@@ -40,7 +40,7 @@ export default function formatValue(value: any, conf: FormatConfig): any {
     case 'numbercompact': {
       //TODO: mover a i18n
       numeral.locale(getLang());
-      return numeral(value).format(conf.formatConf || formatNumberCompact(conf.context));
+      return numeral(value).format(conf.formatConf as string || formatNumberCompact(conf.context));
     }
     case 'number': {
       return typeof value === 'boolean' ? Number(value)
@@ -61,14 +61,14 @@ export default function formatValue(value: any, conf: FormatConfig): any {
       return t(value, conf.context);
     }
     case 'date': {
-      return moment(value).format(conf.formatConf || formatDate(conf.context));
+      return moment(value).format(conf.formatConf as string || formatDate(conf.context));
     }
     case 'time': {
-      return moment(value).format(conf.formatConf || formatTime(conf.context));
+      return moment(value).format(conf.formatConf as string || formatTime(conf.context));
     }
     case 'date-time':
     case 'datetime': {
-      return moment(value).format(conf.formatConf || formatDateTime(conf.context));
+      return moment(value).format(conf.formatConf as string || formatDateTime(conf.context));
     }
     default: {
       return value;

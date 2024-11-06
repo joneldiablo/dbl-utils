@@ -11,10 +11,10 @@ interface ConfigOptions {
 }
 
 interface TransformOptions {
-  beforeFunc?: (context: Context) => void;
-  duringFunc?: (context: Context) => void;
-  afterFunc?: (context: Context) => void;
-  nonObjectFunc?: (context: Context) => void;
+  beforeFunc?: (context: Context) => any;
+  duringFunc?: (context: Context) => any;
+  afterFunc?: (context: Context) => any;
+  nonObjectFunc?: (context: Context) => any;
   filter?: string | string[] | ((context: Context) => boolean);
   key?: string;
   root?: any;
