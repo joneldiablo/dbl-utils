@@ -9,7 +9,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [Main Modules](#main-modules)
-- [Utilities](#Utilities)
+- [Utilities](#utilities)
 - [Documentation](#documentation)
 - [License](#license)
 
@@ -74,14 +74,14 @@ For a complete reference of all available functions, visit the [full documentati
 
 Below are the main modules available in `dbl-utils`:
 
-- [event-handler](../blob/main/src/event-handler.ts)
-- [fetch-queue](../blob/main/src/fetch-queue.ts)
-- [flat](../blob/main/src/flat.ts)
-- [format-value](../blob/main/src/format-value.ts)
-- [i18n](../blob/main/src/i18n.ts)
-- [object-mutation](../blob/main/src/object-mutation.ts)
-- [resolve-refs](../blob/main/src/resolve-refs.ts)
-- [utils](../blob/main/src/utils.ts)
+- [event-handler](https://github.com/joneldiablo/dbl-utils/blob/master/src/event-handler.ts)
+- [fetch-queue](https://github.com/joneldiablo/dbl-utils/blob/master/src/fetch-queue.ts)
+- [flat](https://github.com/joneldiablo/dbl-utils/blob/master/src/flat.ts)
+- [format-value](https://github.com/joneldiablo/dbl-utils/blob/master/src/format-value.ts)
+- [i18n](https://github.com/joneldiablo/dbl-utils/blob/master/src/i18n.ts)
+- [object-mutation](https://github.com/joneldiablo/dbl-utils/blob/master/src/object-mutation.ts)
+- [resolve-refs](https://github.com/joneldiablo/dbl-utils/blob/master/src/resolve-refs.ts)
+- [utils](https://github.com/joneldiablo/dbl-utils/blob/master/src/utils.ts)
 
 ## Utilities
 
