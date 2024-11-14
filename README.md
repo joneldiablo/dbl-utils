@@ -9,7 +9,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [Main Modules](#main-modules)
-- [Utilities](#Utilities)
+- [Utilities](#utilities)
 - [Documentation](#documentation)
 - [License](#license)
 
