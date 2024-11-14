@@ -18,6 +18,8 @@ export function sliceIntoChunks<T>(arr: T[], chunkSize: number): T[][] {
   return res;
 }
 
+export type IArrayString = (null | undefined | boolean | string | IArrayString)[];
+
 /**
  * Splits and flattens a list of strings based on a separator.
  * @param {string[]} arrayStrings - Array of strings to split and flatten.
@@ -25,7 +27,7 @@ export function sliceIntoChunks<T>(arr: T[], chunkSize: number): T[][] {
  * @returns {string[]} Flattened and splitted array of strings.
  */
 export function splitAndFlat(
-  arrayStrings: (null | undefined | boolean | string)[],
+  arrayStrings: IArrayString,
   separator: string = ' '
 ): string[] {
   const r: Array<false | string> = arrayStrings.flatMap(s =>
