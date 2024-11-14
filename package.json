@@ -63,5 +63,20 @@
     "ts-node": "^10.9.2",
     "typedoc": "^0.26.11",
     "typescript": "^5.6.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joneldiablo/dbl-utils.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "TypeScript",
+    "JavaScript",
+    "ESM",
+    "CommonJS",
+    "frontend",
+    "backend",
+    "express",
+    "react"
+  ]
 }
