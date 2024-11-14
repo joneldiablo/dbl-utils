@@ -13,7 +13,10 @@
     "moduleResolution": "Node",
     "module": "CommonJS",
     "target": "ES6",
-    "lib": ["es2019", "dom"],
+    "lib": [
+      "es2019",
+      "dom"
+    ],
     "skipLibCheck": true,
     "outDir": "./dist/cjs",
     "declaration": true,

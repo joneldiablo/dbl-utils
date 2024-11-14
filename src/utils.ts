@@ -159,17 +159,28 @@ export function randomS4(): string {
   return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 }
 
+/**
+ * Generates a random string of the specified length using the provided characters.
+ *
+ * @param {number} [length=16] - The length of the generated string. Default is 16.
+ * @param {string} [characters='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'] - A string representing the characters to be used. Default includes uppercase, lowercase letters, and digits.
+ * @returns {string} A random string composed of the specified characters.
+ */
 export function randomString(
   length: number = 16,
-  characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-) {
+  characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+): string {
   let result = '';
-  let charactersLength = characters.length;
+  const charactersLength = characters.length;
+
   for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    const randomIndex = Math.floor(Math.random() * charactersLength);
+    result += characters.charAt(randomIndex);
   }
+
   return result;
 }
+
 
 //------------------------------------------time
 

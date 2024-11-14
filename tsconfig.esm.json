@@ -13,7 +13,10 @@
     "moduleResolution": "Node",
     "module": "ESNext",
     "target": "ES6",
-    "lib": ["es2019", "dom"],
+    "lib": [
+      "es2019",
+      "dom"
+    ],
     "skipLibCheck": true,
     "outDir": "./dist/esm"
   },
