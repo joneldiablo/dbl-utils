@@ -1,4 +1,4 @@
-type EventCallback = (...data: any[]) => any;
+type EventCallback = (...data: any[]) => any | Function;
 
 interface Pattern {
   pattern: RegExp;
