@@ -8,4 +8,5 @@ export { default as t } from "./i18n";
 export * from "./object-mutation";
 export { default as resolveRefs } from "./resolve-refs";
 export * from "./utils";
+export * from "./extract-react-node-text";
 
