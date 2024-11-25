@@ -1,10 +1,11 @@
-import eventHandler, { EventHandler } from '../src/event-handler';
+import { EventHandler } from '../src/event-handler';
 
 describe('EventHandler', () => {
 
+  let eventHandler: EventHandler;
 
   beforeEach(() => {
-
+    eventHandler = new EventHandler();
   });
 
   it('should subscribe to and dispatch an event', async () => {
@@ -36,9 +37,9 @@ describe('EventHandler', () => {
     const mockCallback = jest.fn().mockResolvedValue('wildcard response');
     eventHandler.subscribe('test*', mockCallback, 'wildcardId');
 
-    const responses = await eventHandler.dispatch('testEvent');
+    const responses = await eventHandler.dispatch('testWildCard___', 'data1', 'data2');
 
-    expect(mockCallback).toHaveBeenCalledWith('testEvent', 'wildcardId');
+    expect(mockCallback).toHaveBeenCalledWith('data1', 'data2', 'wildcardId');
     expect(responses).toEqual(['wildcard response']);
   });
 
@@ -54,5 +55,4 @@ describe('EventHandler', () => {
     expect(cacheKeyExist()).toBe(false);
   });
 
-  // More test cases can be added...
 });
