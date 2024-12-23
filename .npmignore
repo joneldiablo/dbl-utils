@@ -1,6 +1,7 @@
 __tests__
 bin
 coverage
+coverage-e2e
 e2e
 node_modules
 tmp
