@@ -89,20 +89,24 @@ export function unflatten(object: Record<string, any>, delimiter: string = '.'):
       // Determine whether to create an array or an object
       const isLastKey = (index === keys.length - 1);
 
+      if (keyIsInteger) {
+        if (!Array.isArray(current)) {
+          const parent = keys.slice(0, index - 1).reduce((acc, k) => {
+            const kIsInteger = isInteger(k);
+            return acc[kIsInteger ? parseInt(k) : k];
+          }, result);
+          parent[keys[index - 1]] = Object.values(current);
+          current = parent[keys[index - 1]];
+        }
+        current[parseInt(key)] = {};
+      } else if (!current[key]) {
+        current[key] = {};
+      }
+
       if (isLastKey) {
         current[keyIsInteger ? parseInt(key) : key] = value;
       } else {
-        if (keyIsInteger) {
-          if (!Array.isArray(current)) {
-            current[key] = [];
-          }
-          current = current[parseInt(key)] = current[parseInt(key)] || [];
-        } else {
-          if (!current[key] || typeof current[key] !== 'object') {
-            current[key] = {};
-          }
-          current = current[key];
-        }
+        current = current[keyIsInteger ? parseInt(key) : key];
       }
     });
   });

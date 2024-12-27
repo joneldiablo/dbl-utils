@@ -2,5 +2,5 @@
   "entryPoints": ["src"],
   "out": "docs",
   "exclude": ["**/*+(index|.d).ts"],
-  "tsconfig": "tsconfig.json"
+  "tsconfig": "tsconfig.build.json"
 }
