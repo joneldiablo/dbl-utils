@@ -14,7 +14,8 @@ const config: JestConfigWithTsJest = {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
   testMatch: ['**/e2e/**/*.e2e.ts'],
-  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$|.*flat.*)']
+  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$|.*flat.*)'],
+  coverageDirectory: 'coverage_e2e'
 };
 
 export default config;

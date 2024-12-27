@@ -4,7 +4,6 @@ export { default as formatValue } from "./format-value";
 export { default as resolveRefs } from "./resolve-refs";
 export { default as t } from "./i18n";
 export * from "./event-handler";
-export * from "./extract-react-node-text";
 export * from "./flat";
 export * from "./i18n";
 export * from "./object-mutation";
