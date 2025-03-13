@@ -12,9 +12,38 @@
       "types": "./dist/types/index.d.ts",
       "source": "./src/index.ts"
     },
-    "./ts/*": "./src/*",
+    "./ts/*": {
+      "types": "./dist/types/index.d.ts",
+      "source": "./src"
+    },
     "./esm/*": "./dist/esm/*",
-    "./cjs/*": "./dist/cjs/*"
+    "./cjs/*": "./dist/cjs/*",
+    "./esm/event-handler": "./dist/esm/event-handler.js",
+    "./esm/extract-react-node-text": "./dist/esm/extract-react-node-text.js",
+    "./esm/fetch-queue": "./dist/esm/fetch-queue.js",
+    "./esm/flat": "./dist/esm/flat.js",
+    "./esm/format-value": "./dist/esm/format-value.js",
+    "./esm/i18n": "./dist/esm/i18n.js",
+    "./esm/index": "./dist/esm/index.js",
+    "./esm/object-mutation": "./dist/esm/object-mutation.js",
+    "./esm/purge-css-cli": "./dist/esm/purge-css-cli.js",
+    "./esm/purge-css": "./dist/esm/purge-css.js",
+    "./esm/resolve-refs-try2": "./dist/esm/resolve-refs-try2.js",
+    "./esm/resolve-refs": "./dist/esm/resolve-refs.js",
+    "./esm/utils": "./dist/esm/utils.js",
+    "./cjs/event-handler": "./dist/cjs/event-handler.js",
+    "./cjs/extract-react-node-text": "./dist/cjs/extract-react-node-text.js",
+    "./cjs/fetch-queue": "./dist/cjs/fetch-queue.js",
+    "./cjs/flat": "./dist/cjs/flat.js",
+    "./cjs/format-value": "./dist/cjs/format-value.js",
+    "./cjs/i18n": "./dist/cjs/i18n.js",
+    "./cjs/index": "./dist/cjs/index.js",
+    "./cjs/object-mutation": "./dist/cjs/object-mutation.js",
+    "./cjs/purge-css-cli": "./dist/cjs/purge-css-cli.js",
+    "./cjs/purge-css": "./dist/cjs/purge-css.js",
+    "./cjs/resolve-refs-try2": "./dist/cjs/resolve-refs-try2.js",
+    "./cjs/resolve-refs": "./dist/cjs/resolve-refs.js",
+    "./cjs/utils": "./dist/cjs/utils.js"
   },
   "directories": {
     "ts": "src",
@@ -32,7 +61,9 @@
   "author": "joneldiablo",
   "license": "ISC",
   "peerDependencies": {
-    "react": "^18.3.1"
+    "react": "^18.3.1",
+    "prettier": "^3.5.3",
+    "purgecss": "^7.0.2"
   },
   "peerDependenciesMeta": {
     "react": {
