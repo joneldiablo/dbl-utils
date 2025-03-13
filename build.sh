@@ -68,6 +68,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+node exports.js
 # Update version and capture the new version
 new_version=$(node update-version.js)
 
