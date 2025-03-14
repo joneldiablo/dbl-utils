@@ -10,40 +10,86 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js",
       "types": "./dist/types/index.d.ts",
-      "source": "./src/index.ts"
+      "source": "./src/js/index.ts"
     },
-    "./ts/*": {
+    "./event-handler": {
+      "import": "./dist/esm/event-handler.js",
+      "require": "./dist/cjs/event-handler.js",
+      "types": "./dist/types/event-handler.d.ts",
+      "source": "./src/js/event-handler.ts"
+    },
+    "./extract-react-node-text": {
+      "import": "./dist/esm/extract-react-node-text.js",
+      "require": "./dist/cjs/extract-react-node-text.js",
+      "types": "./dist/types/extract-react-node-text.d.ts",
+      "source": "./src/js/extract-react-node-text.ts"
+    },
+    "./fetch-queue": {
+      "import": "./dist/esm/fetch-queue.js",
+      "require": "./dist/cjs/fetch-queue.js",
+      "types": "./dist/types/fetch-queue.d.ts",
+      "source": "./src/js/fetch-queue.ts"
+    },
+    "./flat": {
+      "import": "./dist/esm/flat.js",
+      "require": "./dist/cjs/flat.js",
+      "types": "./dist/types/flat.d.ts",
+      "source": "./src/js/flat.ts"
+    },
+    "./format-value": {
+      "import": "./dist/esm/format-value.js",
+      "require": "./dist/cjs/format-value.js",
+      "types": "./dist/types/format-value.d.ts",
+      "source": "./src/js/format-value.ts"
+    },
+    "./i18n": {
+      "import": "./dist/esm/i18n.js",
+      "require": "./dist/cjs/i18n.js",
+      "types": "./dist/types/i18n.d.ts",
+      "source": "./src/js/i18n.ts"
+    },
+    "./index": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
       "types": "./dist/types/index.d.ts",
-      "source": "./src"
+      "source": "./src/js/index.ts"
     },
-    "./esm/*": "./dist/esm/*",
-    "./cjs/*": "./dist/cjs/*",
-    "./esm/event-handler": "./dist/esm/event-handler.js",
-    "./esm/extract-react-node-text": "./dist/esm/extract-react-node-text.js",
-    "./esm/fetch-queue": "./dist/esm/fetch-queue.js",
-    "./esm/flat": "./dist/esm/flat.js",
-    "./esm/format-value": "./dist/esm/format-value.js",
-    "./esm/i18n": "./dist/esm/i18n.js",
-    "./esm/index": "./dist/esm/index.js",
-    "./esm/object-mutation": "./dist/esm/object-mutation.js",
-    "./esm/purge-css-cli": "./dist/esm/purge-css-cli.js",
-    "./esm/purge-css": "./dist/esm/purge-css.js",
-    "./esm/resolve-refs-try2": "./dist/esm/resolve-refs-try2.js",
-    "./esm/resolve-refs": "./dist/esm/resolve-refs.js",
-    "./esm/utils": "./dist/esm/utils.js",
-    "./cjs/event-handler": "./dist/cjs/event-handler.js",
-    "./cjs/extract-react-node-text": "./dist/cjs/extract-react-node-text.js",
-    "./cjs/fetch-queue": "./dist/cjs/fetch-queue.js",
-    "./cjs/flat": "./dist/cjs/flat.js",
-    "./cjs/format-value": "./dist/cjs/format-value.js",
-    "./cjs/i18n": "./dist/cjs/i18n.js",
-    "./cjs/index": "./dist/cjs/index.js",
-    "./cjs/object-mutation": "./dist/cjs/object-mutation.js",
-    "./cjs/purge-css-cli": "./dist/cjs/purge-css-cli.js",
-    "./cjs/purge-css": "./dist/cjs/purge-css.js",
-    "./cjs/resolve-refs-try2": "./dist/cjs/resolve-refs-try2.js",
-    "./cjs/resolve-refs": "./dist/cjs/resolve-refs.js",
-    "./cjs/utils": "./dist/cjs/utils.js"
+    "./object-mutation": {
+      "import": "./dist/esm/object-mutation.js",
+      "require": "./dist/cjs/object-mutation.js",
+      "types": "./dist/types/object-mutation.d.ts",
+      "source": "./src/js/object-mutation.ts"
+    },
+    "./purge-css-cli": {
+      "import": "./dist/esm/purge-css-cli.js",
+      "require": "./dist/cjs/purge-css-cli.js",
+      "types": "./dist/types/purge-css-cli.d.ts",
+      "source": "./src/js/purge-css-cli.ts"
+    },
+    "./purge-css": {
+      "import": "./dist/esm/purge-css.js",
+      "require": "./dist/cjs/purge-css.js",
+      "types": "./dist/types/purge-css.d.ts",
+      "source": "./src/js/purge-css.ts"
+    },
+    "./resolve-refs-try2": {
+      "import": "./dist/esm/resolve-refs-try2.js",
+      "require": "./dist/cjs/resolve-refs-try2.js",
+      "types": "./dist/types/resolve-refs-try2.d.ts",
+      "source": "./src/js/resolve-refs-try2.ts"
+    },
+    "./resolve-refs": {
+      "import": "./dist/esm/resolve-refs.js",
+      "require": "./dist/cjs/resolve-refs.js",
+      "types": "./dist/types/resolve-refs.d.ts",
+      "source": "./src/js/resolve-refs.ts"
+    },
+    "./utils": {
+      "import": "./dist/esm/utils.js",
+      "require": "./dist/cjs/utils.js",
+      "types": "./dist/types/utils.d.ts",
+      "source": "./src/js/utils.ts"
+    }
   },
   "directories": {
     "ts": "src",
