@@ -10,8 +10,8 @@
     ],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "Node",
-    "module": "CommonJS",
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
     "target": "ES6",
     "lib": [
       "es2019",

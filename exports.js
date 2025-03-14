@@ -36,6 +36,17 @@ const removeExtension = (filePath) => {
 };
 
 /**
+ * Determines the correct source file extension by checking if it exists.
+ * @param {string} basePath - The base path without extension.
+ * @returns {string} - The correct file path with the appropriate extension.
+ */
+const getSourceFilePath = (basePath) => {
+  const tsPath = `${basePath}.ts`;
+  const tsxPath = `${basePath}.tsx`;
+  return fs.existsSync(tsxPath) ? tsxPath : tsPath;
+};
+
+/**
  * Generates the exports and directories fields dynamically based on dist folder structure.
  */
 const generateExportsAndDirectories = () => {
@@ -47,7 +58,7 @@ const generateExportsAndDirectories = () => {
 
   const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
 
-  const srcDir = path.join(process.cwd(), 'src');
+  const srcDir = path.join(process.cwd(), 'src/js');
   const distDir = path.join(process.cwd(), 'dist');
 
   if (!fs.existsSync(distDir)) {
@@ -60,48 +71,29 @@ const generateExportsAndDirectories = () => {
   const typesDir = path.join(distDir, 'types');
 
   const exportsConfig = {
-    '.': {
-      import: './dist/esm/index.js',
-      require: './dist/cjs/index.js',
-      types: './dist/types/index.d.ts',
-      source: './src/index.ts'
-    },
-    './ts/*': {
-      types: './dist/types/index.d.ts',
-      source: './src'
-    },
-    './esm/*': './dist/esm/*',
-    './cjs/*': './dist/cjs/*'
+    ".": {
+      import: "./dist/esm/index.js",
+      require: "./dist/cjs/index.js",
+      types: "./dist/types/index.d.ts",
+      source: getSourceFilePath("./src/js/index")
+    }
   };
 
-  const directoriesConfig = {};
-
-  // Ensure directories exist before adding them
-  if (fs.existsSync(srcDir)) directoriesConfig.ts = 'src';
-  if (fs.existsSync(esmDir)) directoriesConfig.esm = 'dist/esm';
-  if (fs.existsSync(cjsDir)) directoriesConfig.cjs = 'dist/cjs';
-
-  // Read the contents of dist/esm and dist/cjs to add dynamic exports
-  if (fs.existsSync(esmDir)) {
+  if (fs.existsSync(esmDir) && fs.existsSync(cjsDir) && fs.existsSync(typesDir)) {
     const esmFiles = getFilesRecursively(esmDir, esmDir);
     esmFiles.forEach(file => {
-      const key = `./esm/${removeExtension(file).replace(/\\/g, '/')}`;
-      const value = `./dist/esm/${file.replace(/\\/g, '/')}`;
-      exportsConfig[key] = value;
-    });
-  }
-
-  if (fs.existsSync(cjsDir)) {
-    const cjsFiles = getFilesRecursively(cjsDir, cjsDir);
-    cjsFiles.forEach(file => {
-      const key = `./cjs/${removeExtension(file).replace(/\\/g, '/')}`;
-      const value = `./dist/cjs/${file.replace(/\\/g, '/')}`;
-      exportsConfig[key] = value;
+      const baseFilePath = `./src/js/${removeExtension(file).replace(/\\/g, '/')}`;
+      const key = `./${removeExtension(file).replace(/\\/g, '/')}`;
+      exportsConfig[key] = {
+        import: `./dist/esm/${file.replace(/\\/g, '/')}`,
+        require: `./dist/cjs/${file.replace(/\\/g, '/')}`,
+        types: `./dist/types/${removeExtension(file).replace(/\\/g, '/')}.d.ts`,
+        source: getSourceFilePath(baseFilePath)
+      };
     });
   }
 
   packageJson.exports = exportsConfig;
-  packageJson.directories = directoriesConfig;
 
   fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
   console.log('✅ package.json updated successfully');
