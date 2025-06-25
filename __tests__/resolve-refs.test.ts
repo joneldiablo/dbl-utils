@@ -46,6 +46,15 @@ describe('TEST resolveRefs', () => {
     expect(result[2]).toEqual(data.values.value3);
   });
 
+  test('Resolve embedded references in strings using ${...}', () => {
+    const result = resolveRefs({
+      greeting: "Hola ${values/value1}, cómo estás?",
+      complex: "Suma: ${values/value1} + ${values/value2} = ${values/value3}"
+    }, data);
+    expect(result.greeting).toEqual(`Hola ${data.values.value1}, cómo estás?`);
+    expect(result.complex).toEqual(`Suma: ${data.values.value1} + ${data.values.value2} = ${data.values.value3}`);
+  });
+
   test('Resolve references expanding object and replace value', () => {
     const result = resolveRefs({
       ref: "$values",
