@@ -52,7 +52,7 @@ export default
           });
         }
         return toReturn;
-      } else if (typeof item === 'string' && item[0] === '$') {
+      } else if (typeof item === 'string' && item[0] === '$' && item[1] !== '{') {
         const fixed = processRules(item);
         if (fixed !== undefined) return fixed;
         let keys = item.substring(1).split('/');
@@ -65,6 +65,24 @@ export default
           return item;
         }
         return loop(data);
+      } else if (typeof item === 'string' && item.includes('${')) {
+        // Reemplaza todas las ocurrencias de ${some/path} dentro del string
+        const pattern = /\$\{([^}]+?)\}/g; // Coincide con ${algo/aqui}
+        let result = item;
+
+        result = result.replace(pattern, (match, path) => {
+          try {
+            const keys = path.split('/');
+            let data = keys.reduce((obj: any, key: string) => obj[key], schema);
+            data = JSON.parse(JSON.stringify(data));
+            const processed = loop(data);
+            return typeof processed === 'string' ? processed : JSON.stringify(processed);
+          } catch (err) {
+            return match; // Si falla el acceso, no cambia el string
+          }
+        });
+
+        return result;
       } else return item;
     }
     return loop(JSON.parse(JSON.stringify(object)));
