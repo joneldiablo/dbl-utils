@@ -1,8 +1,36 @@
 import { deepMerge } from "./object-mutation";
 import { unflatten } from "./flat";
 
-export default
-  (object: any, schema = JSON.parse(JSON.stringify(object)), rules: Record<string, [string, ...any[]]> = {}, extraTasks: Record<string, Function> = {}): any => {
+/**
+ * Resolve `$` references within an object or array using a provided schema.
+ *
+ * References are resolved recursively allowing simple string lookups and
+ * advanced operations defined by `rules`.
+ *
+ * @param object - Object or array containing `$path/to/value` references.
+ * @param schema - Optional schema object used as the base for lookups.
+ *   Defaults to a deep clone of `object`.
+ * @param rules - Custom rule definitions used when a reference matches a rule
+ *   key. Each rule maps to a tuple where the first element is the task name and
+ *   the rest are arguments passed to that task.
+ * @param extraTasks - Additional task implementations that can be referenced in
+ *   `rules`.
+ * @returns The object with all references resolved.
+ *
+ * @example
+ * ```ts
+ * const data = { values: { a: 1 } };
+ * const obj = { num: "$values/a" };
+ * const result = resolveRefs(obj, data);
+ * console.log(result.num); // 1
+ * ```
+ */
+export default (
+  object: any,
+  schema = JSON.parse(JSON.stringify(object)),
+  rules: Record<string, [string, ...any[]]> = {},
+  extraTasks: Record<string, Function> = {}
+): any => {
     const processRules = (key: string): any => {
       if (!rules[key]) return undefined;
       const tasks: Record<string, Function> = {
@@ -83,7 +111,10 @@ export default
         });
 
         return result;
-      } else return item;
+      } else {
+        return item;
+      }
     }
     return loop(JSON.parse(JSON.stringify(object)));
-  }
+  };
+
