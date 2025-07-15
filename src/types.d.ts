@@ -1,1 +1,2 @@
 declare module 'pluralize-es';
+
