@@ -1,6 +1,6 @@
 #! bin/ts-node
 import * as path from "path";
-import purgeCss from "./purge-css"; // Importa la función desde otro archivo
+import purgeCss from "./purge-css"; // Import the function from another file
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 

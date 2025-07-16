@@ -26,6 +26,12 @@ type FlatCopyOptions = {
  * @param options - Configuration options for flattening
  * @returns A single-level object with flattened keys
  * @throws Will throw an error if the input is not an object
+ *
+ * @example
+ * ```ts
+ * const result = flatten({ a: { b: 1 } });
+ * // result => { 'a.b': 1 }
+ * ```
  */
 export function flatten(
   object: object,
@@ -88,6 +94,12 @@ export function flatten(
  * @param object - The object to unflatten
  * @param delimiter - The delimiter used to flatten the object
  * @returns A nested object or array
+ *
+ * @example
+ * ```ts
+ * const obj = unflatten({ 'a.b': 1 });
+ * // obj => { a: { b: 1 } }
+ * ```
  */
 export function unflatten(
   object: Record<string, any>,
@@ -165,6 +177,13 @@ export const addFormatters = (
  * Serializes an object or array of objects into a flat list of field entries.
  * You can customize the process using `before` (pre-processing per item)
  * and `after` (post-processing per field).
+ *
+ * @example
+ * ```ts
+ * const data = { a: 1, b: { c: 2 } };
+ * const entries = await serialize(data);
+ * // entries[0] => { path: 'a', value: '1', type: 'number', uuid: '...' }
+ * ```
  */
 export const serialize = async (
   data: any,
@@ -182,7 +201,7 @@ export const serialize = async (
     groupKey?: string;
   } = {}
 ) => {
-  // Opciones por defecto
+  // Default options
   opts = Object.assign(
     {
       metaIdentifier: "$",
@@ -203,7 +222,7 @@ export const serialize = async (
               )
             : rawLineContent;
 
-          // Separar los metadatos
+          // Separate metadata fields
           const metaValues: Record<string, any> = {};
           Object.keys(lineContent).forEach((k) => {
             if (!k.startsWith(opts.metaIdentifier!)) return;
@@ -211,7 +230,7 @@ export const serialize = async (
             delete lineContent[k];
           });
 
-          // ✅ Si no hay groupKey en los metadatos, generamos uno
+          // ✅ Generate a groupKey if none is provided in metadata
           const groupKeyName = opts.groupKey!;
           metaValues[groupKeyName] = metaValues[groupKeyName] || uuidv4();
 
@@ -231,7 +250,7 @@ export const serialize = async (
                     path,
                     value: String(value),
                     type: typeof value,
-                    [groupKeyName]: metaValues[groupKeyName], // ✅ siempre incluir groupKey
+                    [groupKeyName]: metaValues[groupKeyName], // ✅ always include groupKey
                     ...cpMetaValues,
                   };
               return obj;
@@ -250,6 +269,12 @@ export const serialize = async (
  * Deserializes a flat list of entries into full objects.
  * Groups entries by a defined key (e.g. uuid or content_uuid) if present.
  * Optionally applies a `before` hook to each entry before processing.
+ *
+ * @example
+ * ```ts
+ * const objects = await deserialize(entries);
+ * // objects => [{ a: 1, b: { c: 2 } }]
+ * ```
  */
 export const deserialize = async (
   serialized: Array<{
@@ -296,14 +321,14 @@ export const deserialize = async (
       ? (grouped[groupId][opts.metaIdentifier!] ??= {})
       : grouped[groupId];
 
-    // Siempre guardar el groupKey
+    // Always store the groupKey
     const idKey = opts.metaObject
       ? opts.groupKey!
       : opts.metaIdentifier + opts.groupKey!;
 
     groupMeta[idKey] = groupMeta[idKey] ?? groupId;
 
-    // Usamos Set para acumular metadatos
+    // Use Set to accumulate metadata
     Object.entries(meta).forEach(([key, rawVal]) => {
       let val;
       switch (true) {
@@ -332,7 +357,7 @@ export const deserialize = async (
     grouped[groupId][path] = formattedValue;
   }
 
-  // Limpieza final: convertir Set → único valor, array o eliminar
+  // Final cleanup: convert Set → single value, array or remove
   for (const group of Object.values(grouped)) {
     const container = opts.metaObject ? group[opts.metaIdentifier!] : group;
 
