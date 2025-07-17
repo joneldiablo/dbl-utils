@@ -42,11 +42,22 @@ const config: Config = {
 let isTrackingText = false;
 let trackingTextSet = new Set<string>();
 
-export function trackingTexts(setTracking: boolean = true) {
+/**
+ * Enable or disable text tracking.
+ * When enabled every translation key requested will be stored.
+ *
+ * @param setTracking - Whether tracking should be enabled
+ */
+export function trackingTexts(setTracking: boolean = true): void {
   isTrackingText = setTracking;
 }
 
-export function getTexts() {
+/**
+ * Retrieve the list of tracked texts.
+ *
+ * @returns Array of unique translation keys requested
+ */
+export function getTexts(): string[] {
   return Array.from(trackingTextSet);
 }
 

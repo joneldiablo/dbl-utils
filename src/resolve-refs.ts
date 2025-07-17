@@ -84,7 +84,7 @@ export default (
         const fixed = processRules(item);
         if (fixed !== undefined) return fixed;
         let keys = item.substring(1).split('/');
-        // Obtiene el contenido de $path/to/element 
+        // Get the content of $path/to/element
         let data;
         try {
           data = keys.reduce((obj, key) => obj[key], schema);
@@ -94,8 +94,8 @@ export default (
         }
         return loop(data);
       } else if (typeof item === 'string' && item.includes('${')) {
-        // Reemplaza todas las ocurrencias de ${some/path} dentro del string
-        const pattern = /\$\{([^}]+?)\}/g; // Coincide con ${algo/aqui}
+        // Replace all occurrences of ${some/path} within the string
+        const pattern = /\$\{([^}]+?)\}/g; // Matches ${something/here}
         let result = item;
 
         result = result.replace(pattern, (match, path) => {
@@ -106,7 +106,7 @@ export default (
             const processed = loop(data);
             return typeof processed === 'string' ? processed : JSON.stringify(processed);
           } catch (err) {
-            return match; // Si falla el acceso, no cambia el string
+            return match; // If lookup fails, keep the original
           }
         });
 
