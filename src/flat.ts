@@ -90,71 +90,51 @@ export function flatten(
 }
 
 /**
- * Reverts a flattened object back to its nested structure, with support for arrays.
- *
- *
- * @param object - The object to unflatten
- * @param delimiter - The delimiter used to flatten the object
- * @returns A nested object or array
- *
- * @example
- * ```ts
- * const obj = unflatten({ 'a.b': 1 });
- * // obj => { a: { b: 1 } }
- * ```
+ * Reconstructs a nested object from a flattened one using a delimiter.
+ * @param object The flattened object.
+ * @param delimiter The string delimiter used to split keys.
+ * @returns The nested (unflattened) object.
  */
 export function unflatten(
   object: Record<string, any>,
   delimiter: string = "."
-): object {
+): Record<string, any> {
   if (typeof object !== "object" || object === null)
     throw new Error("Input must be an object");
 
   const result: Record<string, any> = {};
 
-  // Helper function to determine if a string is a valid integer
   const isInteger = (key: string): boolean => /^\d+$/.test(key);
 
-  // Iterate over each key-value pair in the flattened object
-  Object.keys(object).forEach((flatKey) => {
+  for (const flatKey of Object.keys(object)) {
     const value = object[flatKey];
     const keys = flatKey.split(delimiter);
-    let current = result;
+    let current: any = result;
 
-    // Traverse the keys path
-    keys.forEach((key, index) => {
-      // Check if the key is a valid integer
-      const keyIsInteger = isInteger(key);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const nextKey = keys[i + 1];
+      const isLast = i === keys.length - 1;
+      const keyIsIndex = isInteger(key);
+      const nextIsIndex = isInteger(nextKey);
 
-      // Determine whether to create an array or an object
-      const isLastKey = index === keys.length - 1;
+      // Convert key if it should be array index
+      const realKey = keyIsIndex ? parseInt(key, 10) : key;
 
-      if (keyIsInteger) {
-        if (!Array.isArray(target)) target = [];
-        target[parsedKey] = value;
+      // Handle last key (set value)
+      if (isLast) {
+        current[realKey] = value;
       } else {
-        if (typeof target !== 'object' || target === null || Array.isArray(target)) target = {};
-        target[parsedKey] = value;
+        // Create container if needed
+        if (current[realKey] === undefined) {
+          current[realKey] = nextIsIndex ? [] : {};
+        }
+
+        // Move deeper
+        current = current[realKey];
       }
-      return target;
     }
-
-    if (keyIsInteger) {
-      if (!Array.isArray(target)) target = [];
-      target[parsedKey] = setValue(target[parsedKey] ?? (nextShouldBeArray ? [] : {}), rest, value);
-    } else {
-      if (typeof target !== 'object' || target === null || Array.isArray(target)) target = {};
-      target[parsedKey] = setValue(target[parsedKey] ?? (nextShouldBeArray ? [] : {}), rest, value);
-    }
-
-    return target;
-  };
-
-  let result: any = Array.isArray(object) ? [] : {};
-  Object.entries(object).forEach(([flatKey, value]) => {
-    const keys = flatKey.split(delimiter);
-    result = setValue(result, keys, value);
-  });
+  }
 
   return result;
 }
@@ -306,7 +286,7 @@ export const deserialize = async (
     {
       metaIdentifier: "$",
       groupKey: "uuid",
-      metaObject: false
+      metaObject: false,
     },
     opts
   );
@@ -384,4 +364,3 @@ export const deserialize = async (
 
   return deserialized;
 };
-
