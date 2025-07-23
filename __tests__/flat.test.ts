@@ -56,7 +56,6 @@ describe("unflatten", () => {
     const input = { "a.0": 1, "a.1.0": 2, "a.2.b": [3] };
     const expected = { a: [1, [2], { b: [3] }] };
     const result = unflatten(input);
-    console.log(result);
     expect(result).toEqual(expected);
   });
 
@@ -75,8 +74,8 @@ describe("unflatten", () => {
         uuid: ["1234-5678-91011"],
       },
     };
+
     const result = unflatten(input, "/");
-    console.log(result);
     expect(result).toEqual(expected);
   });
 
@@ -86,7 +85,7 @@ describe("unflatten", () => {
     const result = unflatten(input, "-");
     expect(result).toEqual(expected);
   });
-
+  
   it("should return exactly the same object readed", () => {
     const obj = require("./unflatten-obj.json");
     const flattenValue = flatten(obj, { delimiter: "/" });

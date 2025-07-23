@@ -5,9 +5,14 @@ import moment from 'moment';
 
 /**
  * Splits an array into chunks of a given size.
- * @param {T[]} arr - Array to split into chunks.
- * @param {number} chunkSize - Size of each chunk.
- * @returns {T[][]} Array of chunked arrays.
+ * @param arr - Array to split into chunks.
+ * @param chunkSize - Size of each chunk.
+ * @returns Array of chunked arrays.
+ *
+ * @example
+ * ```ts
+ * sliceIntoChunks([1,2,3,4], 2); // [[1,2],[3,4]]
+ * ```
  */
 export function sliceIntoChunks<T>(arr: T[], chunkSize: number): T[][] {
   const res: T[][] = [];
@@ -47,6 +52,12 @@ export function splitAndFlat(
  * @param options.bounds - The bounds for color transformation.
  * @param options.distribute - Whether the colors should be evenly distributed.
  * @returns An array of colors in the specified format.
+ *
+ * @example
+ * ```ts
+ * generateRandomColors(2, { format: 'rgb' });
+ * // => [[r,g,b], [r,g,b]]
+ * ```
  */
 export function generateRandomColors(
   count: number,
@@ -193,7 +204,12 @@ export function randomString(
  * @param {string|number} options.to - End date in string format or as a UNIX timestamp.
  * @param {number} options.step - The step size in hours for each time interval.
  * @param {string} [options.boundary] - Restrict chunks to 'day', 'month', or 'day,month' boundaries.
- * @returns {Array} An array of objects representing each time interval.
+ * @returns An array of objects representing each time interval.
+ *
+ * @example
+ * ```ts
+ * timeChunks({ from: '2020-01-01', to: '2020-01-02', step: 6 });
+ * ```
  */
 export function timeChunks(options: { from: string | number, to: string | number, step: number, boundary?: string }): { from: string, to: string, step: number }[] {
   const { from, to, step, boundary } = options;
