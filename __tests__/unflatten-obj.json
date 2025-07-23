@@ -1,0 +1,136 @@
+{
+  "slideHero": [
+    {
+      "name": "c1",
+      "image": "/assets/images/c1.jpg",
+      "classes": "slide-in container-xxl"
+    },
+    {
+      "name": "c2",
+      "image": "/assets/images/c2.jpg",
+      "classes": "slide-in container-xxl"
+    },
+    {
+      "name": "c3",
+      "image": "/assets/images/c3.jpg",
+      "classes": "slide-in container-xxl"
+    },
+    {
+      "name": "c4",
+      "image": "/assets/images/c4.jpg",
+      "classes": "slide-in container-xxl"
+    },
+    {
+      "name": "c5",
+      "image": "/assets/images/c5.jpg",
+      "classes": "slide-in container-xxl"
+    },
+    {
+      "name": "c6",
+      "image": "/assets/images/c6.jpg",
+      "classes": "slide-in container-xxl"
+    },
+    {
+      "name": "c7",
+      "image": "/assets/images/c7.jpg",
+      "classes": "slide-in container-xxl"
+    },
+    {
+      "name": "c8",
+      "image": "/assets/images/c8.jpg",
+      "classes": "slide-in container-xxl"
+    },
+    {
+      "name": "c9",
+      "image": "/assets/images/c9.jpg",
+      "classes": "slide-in container-xxl"
+    }
+  ],
+  "about": [
+    "¿Quiénes somos?",
+    "En <b class='text-uppercase atlauhtli'>Atlauhtli</b>, amamos y cuidamos a cada mascota como si fuera nuestra. Somos un equipo de veterinarios y especialistas comprometidos con su bienestar, brindando atención médica, prevención, cirugías y tratamientos personalizados. Porque sabemos que no son solo mascotas, son familia, y su salud es nuestra prioridad. Tu tranquilidad es tan importante como su bienestar.",
+    "Nuestra misión es garantizar que cada peludo, plumífero o escamoso compañero reciba el mejor cuidado posible. Desde un corte de pelo hasta cirugías complejas, trabajamos con pasión y dedicación para que vuelvan a casa felices y saludables. Acompañamos cada etapa de su vida con amor, profesionalismo y el compromiso que merecen. Aquí siempre encontrarán cariño, seguridad y confianza."
+  ],
+  "cta": {
+    "bg": "/assets/images/calltoaction.jpg",
+    "content": {
+      "titleCta": {
+        "name": "titleCta",
+        "wrapperClasses": "container-xxl position-relative h-100",
+        "classes": "h3 fs-5 m-0 fw-bold text-primary text-shadow-white text-uppercase",
+        "content": [
+          "<span class='me-2 display-1'>¿</span>",
+          "Ya Conoces...",
+          {
+            "name": "groupingEnd",
+            "tag": "span",
+            "classes": "position-absolute bottom-0 end-0",
+            "content": {
+              "actionBtn": {
+                "component": "Action",
+                "classes": "btn-primary btn-lg align-text-bottom",
+                "type": "link",
+                "to": "/servicios",
+                "content": "Nuestros Servicios"
+              },
+              "quest": "<span class='ms-2 display-1'>?</span>"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "address": {
+    "title": "Estamos cerca de ti",
+    "text": "Nos encontramos en una ubicación accesible para que puedas visitarnos cuando tu mascota lo necesite. Ven a Atlauhtli y recibe la mejor atención con el cariño y profesionalismo que merecen. ¡Te esperamos con las puertas abiertas!",
+    "mapLink": "https://maps.app.goo.gl/7hbLrNPR7qsuLzeC8",
+    "addressLink": "Calle Margaritas #2b, Cuernavaca Centro, Cuernavaca, Mor. C.P. 62000",
+    "mapSrc": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d235.8914388947718!2d-99.23164092676636!3d18.919748535008942!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85cddf94b4861225%3A0x3bc6124debbc6ff3!2sGuaus%20y%20Miaus%20Centro%20Diagnostico%20Veterinario!5e0!3m2!1ses!2smx!4v1735939820342!5m2!1ses!2smx&z=9"
+  },
+  "phones": {
+    "aesthetics": {
+      "href": "tel:7774933923",
+      "label": "<span>777 493 3923</span>"
+    },
+    "consultation": {
+      "href": "tel:7774505053",
+      "label": "<span>777 450 5053</span>"
+    },
+    "whatsapp": {
+      "href": "https://wa.me/5217774505053",
+      "label": "<span>777 450 5053</span>"
+    },
+    "emergencies": {
+      "href": "tel:7774505053",
+      "label": "<span>777 450 5053</span>"
+    }
+  },
+  "openingHours": {
+    "consultations": [
+      {
+        "days": ["Lunes", "Sábado"],
+        "hours": ["09:00AM", "05:00PM"]
+      },
+      {
+        "days": ["Domingo"],
+        "hours": ["09:00AM", "02:00PM"]
+      }
+    ],
+    "emergencies": [
+      {
+        "days": ["Lunes", "Sábado"],
+        "hours": ["08:00PM", "08:00AM"],
+        "message": " del siguiente día"
+      },
+      {
+        "days": ["Domingo"],
+        "hours": ["02:00PM", "08:00AM"],
+        "message": " del siguiente día"
+      }
+    ]
+  },
+  "contactus": {
+    "title": "Te escuchamos",
+    "description": "Nuestras líneas están abiertas para ti. Ya sea para resolver dudas, agendar una cita o conocer más sobre nuestros servicios."
+  }
+}
