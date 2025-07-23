@@ -22,6 +22,7 @@ type FlatCopyOptions = {
 /**
  * Flattens an object into a single-level object with delimited keys.
  *
+ *
  * @param object - The object to flatten
  * @param options - Configuration options for flattening
  * @returns A single-level object with flattened keys
@@ -91,6 +92,7 @@ export function flatten(
 /**
  * Reverts a flattened object back to its nested structure, with support for arrays.
  *
+ *
  * @param object - The object to unflatten
  * @param delimiter - The delimiter used to flatten the object
  * @returns A nested object or array
@@ -128,25 +130,30 @@ export function unflatten(
       const isLastKey = index === keys.length - 1;
 
       if (keyIsInteger) {
-        if (!Array.isArray(current)) {
-          const parent = keys.slice(0, index - 1).reduce((acc, k) => {
-            const kIsInteger = isInteger(k);
-            return acc[kIsInteger ? parseInt(k) : k];
-          }, result);
-          parent[keys[index - 1]] = Object.values(current);
-          current = parent[keys[index - 1]];
-        }
-        current[parseInt(key)] = {};
-      } else if (!current[key]) {
-        current[key] = {};
-      }
-
-      if (isLastKey) {
-        current[keyIsInteger ? parseInt(key) : key] = value;
+        if (!Array.isArray(target)) target = [];
+        target[parsedKey] = value;
       } else {
-        current = current[keyIsInteger ? parseInt(key) : key];
+        if (typeof target !== 'object' || target === null || Array.isArray(target)) target = {};
+        target[parsedKey] = value;
       }
-    });
+      return target;
+    }
+
+    if (keyIsInteger) {
+      if (!Array.isArray(target)) target = [];
+      target[parsedKey] = setValue(target[parsedKey] ?? (nextShouldBeArray ? [] : {}), rest, value);
+    } else {
+      if (typeof target !== 'object' || target === null || Array.isArray(target)) target = {};
+      target[parsedKey] = setValue(target[parsedKey] ?? (nextShouldBeArray ? [] : {}), rest, value);
+    }
+
+    return target;
+  };
+
+  let result: any = Array.isArray(object) ? [] : {};
+  Object.entries(object).forEach(([flatKey, value]) => {
+    const keys = flatKey.split(delimiter);
+    result = setValue(result, keys, value);
   });
 
   return result;

@@ -140,6 +140,10 @@ Below are the main modules available in `dbl-utils`:
 
 For a detailed description of each module and function, visit the [full documentation](https://joneldiablo.github.io/dbl-utils/modules.html) automatically generated with Typedoc. The documentation includes usage examples and in-depth explanations of each function.
 
+## TODO
+
+- Move number compact formatting to the i18n module.
+
 ## License
 
 This project is under the ISC license. See the `LICENSE` file for more details.
