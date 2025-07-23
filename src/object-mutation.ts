@@ -103,6 +103,12 @@ export function deepMerge(target: any, ...sources: any[]): any {
   return mergedObject;
 }
 
+/**
+ * Configure deep merge behavior. Useful for setting a custom
+ * fixer function before calling {@link deepMerge}.
+ *
+ * @param config - Configuration options.
+ */
 deepMerge.setConfig = (config: ConfigOptions) => {
   useConfig = config;
 };
