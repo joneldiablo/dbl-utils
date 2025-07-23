@@ -88,13 +88,9 @@ describe("unflatten", () => {
   });
 
   it("should return exactly the same object readed", () => {
-    const obj = require("./unflatten-obj.json");
-    const flattenValue = flatten(obj, { delimiter: "/" });
-    console.log(flattenValue);
-    const unflattenValue = unflatten(flattenValue, "/");
-    console.log(unflattenValue);
-    expect(JSON.stringify(unflattenValue)).toEqual(
-      JSON.stringify(obj)
-    );
+    const originalObj = require("./unflatten-obj.json");
+    const flattened = flatten(originalObj, { delimiter: "/" });
+    const restored = unflatten(flattened, "/");
+    expect(restored).toEqual(originalObj);
   });
 });
