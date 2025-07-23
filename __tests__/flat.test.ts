@@ -93,8 +93,8 @@ describe("unflatten", () => {
     console.log(flattenValue);
     const unflattenValue = unflatten(flattenValue, "/");
     console.log(unflattenValue);
-    expect(JSON.stringify(flattenValue)).toEqual(
-      JSON.stringify(unflattenValue)
+    expect(JSON.stringify(unflattenValue)).toEqual(
+      JSON.stringify(obj)
     );
   });
 });
