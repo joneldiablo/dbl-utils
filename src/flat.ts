@@ -91,9 +91,19 @@ export function flatten(
 
 /**
  * Reconstructs a nested object from a flattened one using a delimiter.
- * @param object The flattened object.
- * @param delimiter The string delimiter used to split keys.
+ * Numeric keys are automatically treated as array indices so arrays
+ * are recreated correctly.
+ *
+ * @param object - The flattened object.
+ * @param delimiter - The string delimiter used to split keys.
  * @returns The nested (unflattened) object.
+ *
+ * @example
+ * ```ts
+ * const obj = { 'a.0': 1, 'a.1': 2 };
+ * unflatten(obj);
+ * // => { a: [1, 2] }
+ * ```
  */
 export function unflatten(
   object: Record<string, any>,
