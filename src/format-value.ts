@@ -38,7 +38,7 @@ export default function formatValue(value: any, conf: FormatConfig): any {
   switch (conf.format) {
     case 'number-compact':
     case 'numbercompact': {
-      //TODO: mover a i18n
+      // TODO: move to i18n
       numeral.locale(getLang());
       return numeral(value).format(conf.formatConf as string || formatNumberCompact(conf.context));
     }

@@ -11,11 +11,17 @@ type FlatCopyOptions = {
 
 /**
  * Flattens an object into a single-level object with delimited keys.
- * 
+ *
  * @param object - The object to flatten
  * @param options - Configuration options for flattening
  * @returns A single-level object with flattened keys
  * @throws Will throw an error if the input is not an object
+ *
+ * @example
+ * ```ts
+ * flatten({ a: { b: 1 } });
+ * // => { 'a.b': 1 }
+ * ```
  */
 export function flatten(object: object, options: FlatCopyOptions = {}): Record<string, any> {
   if (options.delimiter === undefined) options.delimiter = '.';
@@ -62,53 +68,58 @@ export function flatten(object: object, options: FlatCopyOptions = {}): Record<s
 
 /**
  * Reverts a flattened object back to its nested structure, with support for arrays.
- * 
+ *
  * @param object - The object to unflatten
  * @param delimiter - The delimiter used to flatten the object
  * @returns A nested object or array
+ *
+ * @example
+ * ```ts
+ * unflatten({ 'a.b': 1 });
+ * // => { a: { b: 1 } }
+ * ```
  */
 export function unflatten(object: Record<string, any>, delimiter: string = '.'): object {
   if (typeof object !== 'object' || object === null) throw new Error('Input must be an object');
 
-  const result: Record<string, any> = {};
-
-  // Helper function to determine if a string is a valid integer
+  // Determines if a string represents an integer value
   const isInteger = (key: string): boolean => /^\d+$/.test(key);
 
-  // Iterate over each key-value pair in the flattened object
-  Object.keys(object).forEach(flatKey => {
-    const value = object[flatKey];
-    const keys = flatKey.split(delimiter);
-    let current = result;
+  // Recursively sets a value on the target based on the provided key path
+  const setValue = (target: any, keys: string[], value: any): any => {
+    if (keys.length === 0) return value;
 
-    // Traverse the keys path
-    keys.forEach((key, index) => {
-      // Check if the key is a valid integer
-      const keyIsInteger = isInteger(key);
+    const [currentKey, ...rest] = keys;
+    const keyIsInteger = isInteger(currentKey);
+    const parsedKey = keyIsInteger ? parseInt(currentKey, 10) : currentKey;
+    const nextShouldBeArray = rest.length > 0 && isInteger(rest[0]);
 
-      // Determine whether to create an array or an object
-      const isLastKey = (index === keys.length - 1);
-
+    if (rest.length === 0) {
       if (keyIsInteger) {
-        if (!Array.isArray(current)) {
-          const parent = keys.slice(0, index - 1).reduce((acc, k) => {
-            const kIsInteger = isInteger(k);
-            return acc[kIsInteger ? parseInt(k) : k];
-          }, result);
-          parent[keys[index - 1]] = Object.values(current);
-          current = parent[keys[index - 1]];
-        }
-        current[parseInt(key)] = {};
-      } else if (!current[key]) {
-        current[key] = {};
-      }
-
-      if (isLastKey) {
-        current[keyIsInteger ? parseInt(key) : key] = value;
+        if (!Array.isArray(target)) target = [];
+        target[parsedKey] = value;
       } else {
-        current = current[keyIsInteger ? parseInt(key) : key];
+        if (typeof target !== 'object' || target === null || Array.isArray(target)) target = {};
+        target[parsedKey] = value;
       }
-    });
+      return target;
+    }
+
+    if (keyIsInteger) {
+      if (!Array.isArray(target)) target = [];
+      target[parsedKey] = setValue(target[parsedKey] ?? (nextShouldBeArray ? [] : {}), rest, value);
+    } else {
+      if (typeof target !== 'object' || target === null || Array.isArray(target)) target = {};
+      target[parsedKey] = setValue(target[parsedKey] ?? (nextShouldBeArray ? [] : {}), rest, value);
+    }
+
+    return target;
+  };
+
+  let result: any = Array.isArray(object) ? [] : {};
+  Object.entries(object).forEach(([flatKey, value]) => {
+    const keys = flatKey.split(delimiter);
+    result = setValue(result, keys, value);
   });
 
   return result;
