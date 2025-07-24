@@ -140,9 +140,20 @@ Below are the main modules available in `dbl-utils`:
 
 For a detailed description of each module and function, visit the [full documentation](https://joneldiablo.github.io/dbl-utils/modules.html) automatically generated with Typedoc. The documentation includes usage examples and in-depth explanations of each function.
 
+## Testing
+
+Run the test suite with:
+
+```bash
+npm test
+```
+
+This project uses Jest with ts-jest. New tests cover the `i18n` and `object-mutation` modules.
+
 ## Recent Changes
 
 - Fixed handling of numeric keys in `unflatten` so arrays are reconstructed correctly.
+- Added unit tests for the `i18n` and `object-mutation` modules.
 
 ## TODO
 
