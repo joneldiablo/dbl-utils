@@ -160,6 +160,10 @@ This project uses Jest with ts-jest. New tests cover the `i18n` and `object-muta
 
 - Move number compact formatting to the i18n module.
 
+## Development & Testing
+
+When developing or debugging tests, use `yarn test -- <pattern>` to run only the relevant test cases.
+
 ## License
 
 This project is under the ISC license. See the `LICENSE` file for more details.

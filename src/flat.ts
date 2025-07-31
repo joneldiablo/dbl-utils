@@ -227,7 +227,7 @@ export const serialize = async (
             delete lineContent[k];
           });
 
-          // ✅ Generate a groupKey if none is provided in metadata
+          // Generate a groupKey if none is provided in metadata
           const groupKeyName = opts.groupKey!;
           metaValues[groupKeyName] = metaValues[groupKeyName] || uuidv4();
 
@@ -247,7 +247,7 @@ export const serialize = async (
                     path,
                     value: String(value),
                     type: typeof value,
-                    [groupKeyName]: metaValues[groupKeyName], // ✅ always include groupKey
+                    [groupKeyName]: metaValues[groupKeyName], // always include groupKey
                     ...cpMetaValues,
                   };
               return obj;
