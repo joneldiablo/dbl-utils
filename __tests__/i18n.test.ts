@@ -1,4 +1,15 @@
-import t, { addDictionary, setLang, addFormatDate, formatDate } from '../src/i18n';
+import t, {
+  addDictionary,
+  setLang,
+  addFormatDate,
+  formatDate,
+  trackingTexts,
+  getTexts,
+  addFormatNumberCompact,
+  formatNumberCompact,
+  addTasks,
+  removeTask
+} from '../src/i18n';
 
 describe('i18n utilities', () => {
   beforeEach(() => {
@@ -14,5 +25,27 @@ describe('i18n utilities', () => {
     addFormatDate({ es: 'DD/MM/YYYY' });
     setLang('es');
     expect(formatDate()).toBe('DD/MM/YYYY');
+  });
+
+  test('trackingTexts collects keys', () => {
+    trackingTexts(true);
+    t('hello');
+    trackingTexts(false);
+    expect(getTexts()).toContain('hello');
+  });
+
+  test('formatNumberCompact uses language specific config', () => {
+    addFormatNumberCompact({ es: '0a' });
+    setLang('es');
+    expect(formatNumberCompact()).toBe('0a');
+  });
+
+  test('addTasks executes on language change and can be removed', () => {
+    const spy = jest.fn();
+    addTasks({ test: spy });
+    setLang('fr');
+    expect(spy).toHaveBeenCalledWith('fr');
+    expect(removeTask('test')).toBe(true);
+    expect(removeTask('test')).toBe(false);
   });
 });
