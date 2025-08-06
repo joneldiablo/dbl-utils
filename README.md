@@ -154,6 +154,7 @@ This project uses Jest with ts-jest. New tests cover the `i18n` and `object-muta
 
 - Fixed handling of numeric keys in `unflatten` so arrays are reconstructed correctly.
 - Added unit tests for the `i18n` and `object-mutation` modules.
+- Expanded coverage with additional tests for `utils`, `format-value`, and `i18n`.
 
 ## TODO
 
