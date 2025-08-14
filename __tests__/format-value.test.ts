@@ -89,7 +89,7 @@ describe("formatValue", () => {
   });
 
   it("formats dates and times", () => {
-    const date = "2024-01-02T03:04:05Z";
+    const date = "2024-01-02T03:04:05";
     expect(
       formatValue(date, { format: "date", formatConf: "YYYY-MM-DD" })
     ).toBe("2024-01-02");
