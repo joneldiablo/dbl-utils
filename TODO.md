@@ -59,7 +59,7 @@
   - Include TypeDoc comments for parameters, return types, and examples.
   - Follow Jest best practices and write all code and comments in English.
 
-- [ ] **Task for Agent: `src/object-mutation.ts`**
+- [x] **Task for Agent: `src/object-mutation.ts`**
   - Add unit tests to cover deep cloning, merge behavior, and mutation prevention logic in `src/object-mutation.ts`.
   - Include tests for circular references and immutability cases.
   - Expected coverage for this file: ≥ 80%.
