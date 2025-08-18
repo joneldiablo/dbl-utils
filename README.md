@@ -148,13 +148,14 @@ Run the test suite with:
 npm test
 ```
 
-This project uses Jest with ts-jest. New tests cover the `i18n` and `object-mutation` modules.
+This project uses Jest with ts-jest. New tests cover the `i18n`, `format-value`, `utils`, and `object-mutation` modules.
 
 ## Recent Changes
 
 - Fixed handling of numeric keys in `unflatten` so arrays are reconstructed correctly.
 - Added unit tests for the `i18n` and `object-mutation` modules.
 - Expanded coverage with additional tests for `utils`, `format-value`, and `i18n`.
+- Added comprehensive tests for `object-mutation`, including configuration fixes and transformation hooks.
 
 ## TODO
 
