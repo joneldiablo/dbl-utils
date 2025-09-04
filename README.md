@@ -39,6 +39,13 @@ console.log(formatCurrency(1234.56)); // Example of currency formatting
 console.log(flatten({ a: { b: { c: 1 } } })); // Converts a nested object into a flat object
 ```
 
+Minimal example of the CLI logic for CSS purging:
+
+```ts
+import purgeCss from 'dbl-utils/src/purge-css';
+purgeCss('styles.css', 'index.html', 'clean.css');
+```
+
 Imports directly from any file to don't include all:
 
 CommonJS use **/dist/cjs/\***
@@ -85,56 +92,188 @@ Below are the main modules available in `dbl-utils`:
 
 ## Utilities
 
-- **event-handler**
-  - *eventHandler*
-  - *EventHandler*
-- **fetch-queue**
-  - *FetchQueue*
-- **flat**
-  - *flatten*
-  - *unflatten*
-- **format-value**
-  - *formatValue*
-- **i18n**
-  - *trackingTexts*
-  - *getTexts*
-  - *addDictionary*
-  - *addFormatDate*
-  - *addFormatTime*
-  - *addFormatDateTime*
-  - *addFormatNumber*
-  - *addFormatNumberCompact*
-  - *addFormatCurrency*
-  - *addTasks*
-  - *removeTask*
-  - *setLang*
-  - *getLang*
-  - *formatDate*
-  - *formatTime*
-  - *formatDateTime*
-  - *formatNumber*
-  - *formatNumberCompact*
-  - *formatCurrency*
-  - *t*
-- **object-mutation**
-  - *mergeWithMutation*
-  - *deepMerge*
-  - *transformJson*
-- **resolve-refs**
-  - *resolveRefs*
-- **utils**
-  - *sliceIntoChunks*
-  - *splitAndFlat*
-  - *generateRandomColors*
-  - *evaluateColorSimilarity*
-  - *normalize*
-  - *slugify*
-  - *randomS4*
-  - *randomString*
-  - *timeChunks*
-  - *delay*
-  - *hash*
-  - *LCG*
+### event-handler
+
+Decouple communication by subscribing to and dispatching custom events.
+
+```ts
+import { EventHandler } from 'dbl-utils';
+
+const handler = new EventHandler();
+handler.subscribe('ping', msg => console.log(msg), 'id'); // listen to events
+await handler.dispatch('ping', 'pong'); // emit an event
+handler.unsubscribe('ping', 'id'); // stop listening
+```
+
+### fetch-queue
+
+Deduplicate concurrent HTTP calls so the same request is only made once.
+
+```ts
+import FetchQueue from 'dbl-utils/src/fetch-queue';
+
+const queue = new FetchQueue(fetch);
+const [a, b] = await Promise.all([
+  queue.addRequest('https://example.com'),
+  queue.addRequest('https://example.com')
+]);
+// a === b
+```
+
+### flat
+
+Convert nested objects to and from dot notation.
+
+```ts
+import { flatten, unflatten } from 'dbl-utils';
+
+flatten({ a: { b: 1 } }); // { 'a.b': 1 }
+unflatten({ 'a.b': 1 }); // { a: { b: 1 } }
+```
+
+### format-value
+
+Format numbers, dates, or dictionary entries using locale-aware helpers.
+
+```ts
+import formatValue from 'dbl-utils/src/format-value';
+
+formatValue(1000, { format: 'currency', currency: 'USD' }); // "$1,000.00"
+```
+
+### i18n
+
+Manage dictionaries and locale-aware formatting.
+
+```ts
+import t, { addDictionary, setLang, formatDate } from 'dbl-utils';
+
+addDictionary({ es: { hello: 'Hola' } });
+setLang('es');
+t('hello'); // 'Hola'
+formatDate(); // date formatted in Spanish
+```
+
+### object-mutation
+
+Combine and transform objects without modifying the originals.
+
+```ts
+import { deepMerge, mergeWithMutation, transformJson } from 'dbl-utils';
+
+deepMerge({}, { a: 1 }, { b: 2 }); // merge nested structures
+await mergeWithMutation({ a: { b: 1 } }, { mutation: () => ({ c: 2 }) }); // async mutation
+transformJson({ a: { b: 1 } }, { filter: 'a' }); // extract subset
+```
+
+### resolve-refs
+
+Replace `$path/to/value` placeholders using a schema.
+
+```ts
+import resolveRefs from 'dbl-utils';
+
+resolveRefs({ num: '$values/a' }, { values: { a: 1 } }).num; // 1
+```
+
+### utils
+
+#### sliceIntoChunks
+Split an array into smaller arrays for batching.
+
+```ts
+import { sliceIntoChunks } from 'dbl-utils';
+sliceIntoChunks([1,2,3,4],2); // [[1,2],[3,4]]
+```
+
+#### splitAndFlat
+Turn a list of strings into unique tokens.
+
+```ts
+import { splitAndFlat } from 'dbl-utils';
+splitAndFlat(['a b','c']); // ['a','b','c']
+```
+
+#### generateRandomColors
+Generate distinct colors for visualizations.
+
+```ts
+import { generateRandomColors } from 'dbl-utils';
+generateRandomColors(2); // ['#aabbcc', '#ddeeff']
+```
+
+#### evaluateColorSimilarity
+Check how close colors are to each other.
+
+```ts
+import { evaluateColorSimilarity } from 'dbl-utils';
+evaluateColorSimilarity(['#fff','#ffe']); // value near 1
+```
+
+#### normalize
+Remove accents and lowercase text.
+
+```ts
+import { normalize } from 'dbl-utils';
+normalize('á'); // 'a'
+```
+
+#### slugify
+Create URL-friendly slugs.
+
+```ts
+import { slugify } from 'dbl-utils';
+slugify('Hello World'); // 'hello-world'
+```
+
+#### randomS4
+Produce a short hex segment.
+
+```ts
+import { randomS4 } from 'dbl-utils';
+randomS4(); // '9f3b'
+```
+
+#### randomString
+Generate a random alphanumeric string.
+
+```ts
+import { randomString } from 'dbl-utils';
+randomString(5); // e.g., 'abcde'
+```
+
+#### timeChunks
+Build time intervals between two dates.
+
+```ts
+import { timeChunks } from 'dbl-utils';
+timeChunks({ from:'2020-01-01', to:'2020-01-02', step:3600 }); // [...]
+```
+
+#### delay
+Pause execution for a given time.
+
+```ts
+import { delay } from 'dbl-utils';
+await delay(10); // waits 10ms
+```
+
+#### hash
+Generate a numeric hash.
+
+```ts
+import { hash } from 'dbl-utils';
+hash('data'); // 123456789
+```
+
+#### LCG
+Deterministic pseudo-random number generator.
+
+```ts
+import { LCG } from 'dbl-utils';
+const gen = new LCG(123);
+gen.random(); // 0.5967...
+```
 
 ## Documentation
 
