@@ -47,6 +47,14 @@ let trackingTextSet = new Set<string>();
  * When enabled every translation key requested will be stored.
  *
  * @param setTracking - Whether tracking should be enabled
+ *
+ * @example
+ * ```ts
+ * trackingTexts(true);
+ * t('hello');
+ * trackingTexts(false);
+ * getTexts(); // ['hello']
+ * ```
  */
 export function trackingTexts(setTracking: boolean = true): void {
   isTrackingText = setTracking;
@@ -56,6 +64,11 @@ export function trackingTexts(setTracking: boolean = true): void {
  * Retrieve the list of tracked texts.
  *
  * @returns Array of unique translation keys requested
+ *
+ * @example
+ * ```ts
+ * getTexts();
+ * ```
  */
 export function getTexts(): string[] {
   return Array.from(trackingTextSet);
@@ -65,6 +78,11 @@ export function getTexts(): string[] {
  * Adds a dictionary to the configuration object.
  * @param {Object} dictionary - The dictionary to add.
  * @returns {boolean} True if added correctly, false otherwise.
+ *
+ * @example
+ * ```ts
+ * addDictionary({ es: { hello: 'Hola' } });
+ * ```
  */
 export const addDictionary = (dictionary: object): boolean => {
   if (typeof dictionary !== 'object') return false;
@@ -76,6 +94,11 @@ export const addDictionary = (dictionary: object): boolean => {
  * Adds date formats to the configuration object.
  * @param {Object} formats - The date formats to add.
  * @returns {boolean} True if added correctly, false otherwise.
+ *
+ * @example
+ * ```ts
+ * addFormatDate({ es: 'DD/MM/YYYY' });
+ * ```
  */
 export const addFormatDate = (formats: object): boolean => {
   if (typeof formats !== 'object') return false;
@@ -87,6 +110,11 @@ export const addFormatDate = (formats: object): boolean => {
  * Adds time formats to the configuration object.
  * @param {Object} formats - The time formats to add.
  * @returns {boolean} True if added correctly, false otherwise.
+ *
+ * @example
+ * ```ts
+ * addFormatTime({ es: 'HH:mm' });
+ * ```
  */
 export const addFormatTime = (formats: object): boolean => {
   if (typeof formats !== 'object') return false;
@@ -98,6 +126,11 @@ export const addFormatTime = (formats: object): boolean => {
  * Adds date-time formats to the configuration object.
  * @param {Object} formats - The date-time formats to add.
  * @returns {boolean} True if added correctly, false otherwise.
+ *
+ * @example
+ * ```ts
+ * addFormatDateTime({ es: 'DD/MM HH:mm' });
+ * ```
  */
 export const addFormatDateTime = (formats: object): boolean => {
   if (typeof formats !== 'object') return false;
@@ -109,6 +142,11 @@ export const addFormatDateTime = (formats: object): boolean => {
  * Adds number formats to the configuration object.
  * @param {Object} formats - The number formats to add.
  * @returns {boolean} True if added correctly, false otherwise.
+ *
+ * @example
+ * ```ts
+ * addFormatNumber({ es: { short: { maximumFractionDigits: 1 } } });
+ * ```
  */
 export const addFormatNumber = (formats: object): boolean => {
   if (typeof formats !== 'object') return false;
@@ -120,6 +158,11 @@ export const addFormatNumber = (formats: object): boolean => {
  * Adds compact number formats to the configuration object.
  * @param {Object} formats - The compact number formats to add.
  * @returns {boolean} True if added correctly, false otherwise.
+ *
+ * @example
+ * ```ts
+ * addFormatNumberCompact({ es: '0a' });
+ * ```
  */
 export const addFormatNumberCompact = (formats: object): boolean => {
   if (typeof formats !== 'object') return false;
@@ -131,6 +174,11 @@ export const addFormatNumberCompact = (formats: object): boolean => {
  * Adds currency formats to the configuration object.
  * @param {Object} formats - The currency formats to add.
  * @returns {boolean} True if added correctly, false otherwise.
+ *
+ * @example
+ * ```ts
+ * addFormatCurrency({ es: { short: { currency: 'EUR' } } });
+ * ```
  */
 export const addFormatCurrency = (formats: object): boolean => {
   if (typeof formats !== 'object') return false;
@@ -143,6 +191,11 @@ export const addFormatCurrency = (formats: object): boolean => {
  * Adds tasks to be executed on language change.
  * @param {Object} tasks - The tasks to add.
  * @returns {boolean} True if added correctly, false otherwise.
+ *
+ * @example
+ * ```ts
+ * addTasks({ reload: lang => console.log(lang) });
+ * ```
  */
 export const addTasks = (tasks: Record<string, (lang: string) => void>): boolean => {
   Object.entries(tasks).forEach(([key, task]) => {
@@ -155,6 +208,11 @@ export const addTasks = (tasks: Record<string, (lang: string) => void>): boolean
  * Removes a specific task.
  * @param {string} key - The key of the task to remove.
  * @returns {boolean} True if removed, false otherwise.
+ *
+ * @example
+ * ```ts
+ * removeTask('reload');
+ * ```
  */
 export const removeTask = (key: string): boolean => {
   if (!config.tasks[key]) return false;
@@ -166,6 +224,11 @@ export const removeTask = (key: string): boolean => {
  * Sets the current language.
  * @param {string} newLang - The new language to set.
  * @returns {boolean} True if set correctly, false otherwise.
+ *
+ * @example
+ * ```ts
+ * setLang('es');
+ * ```
  */
 export const setLang = (newLang: string): boolean => {
   if (!newLang || config.lang === newLang) return false;
@@ -178,6 +241,11 @@ export const setLang = (newLang: string): boolean => {
 /**
  * Gets the current language.
  * @returns {string} The current language.
+ *
+ * @example
+ * ```ts
+ * const lang = getLang();
+ * ```
  */
 export const getLang = (): string => {
   return config.lang;
@@ -201,6 +269,13 @@ const selectFromDefault = (text: string, context?: string): string => {
  * @param {string} text - The text to translate.
  * @param {string} [context] - The context of the text.
  * @returns {string} The translated text.
+ *
+ * @example
+ * ```ts
+ * addDictionary({ es: { hello: 'Hola' } });
+ * setLang('es');
+ * t('hello'); // 'Hola'
+ * ```
  */
 const t = (text: string, context?: string): string => {
   if (isTrackingText) {
@@ -238,6 +313,11 @@ function formatGeneric(formatObject: Record<string, any>, context?: string): str
  * Formats a date according to the current language and context.
  * @param {string} [context] - The context of the date.
  * @returns {string} The formatted date.
+ *
+ * @example
+ * ```ts
+ * formatDate();
+ * ```
  */
 export const formatDate = (context?: string): string => {
   return formatGeneric(config.formatDate, context);
@@ -247,6 +327,11 @@ export const formatDate = (context?: string): string => {
  * Formats a time according to the current language and context.
  * @param {string} [context] - The context of the time.
  * @returns {string} The formatted time.
+ *
+ * @example
+ * ```ts
+ * formatTime();
+ * ```
  */
 export const formatTime = (context?: string): string => {
   return formatGeneric(config.formatTime, context);
@@ -256,6 +341,11 @@ export const formatTime = (context?: string): string => {
  * Formats a date-time according to the current language and context.
  * @param {string} [context] - The context of the date-time.
  * @returns {string} The formatted date-time.
+ *
+ * @example
+ * ```ts
+ * formatDateTime();
+ * ```
  */
 export const formatDateTime = (context?: string): string => {
   return formatGeneric(config.formatDateTime, context);
@@ -265,6 +355,11 @@ export const formatDateTime = (context?: string): string => {
  * Formats a number according to the current language and context.
  * @param {string} [context] - The context of the number.
  * @returns {string} The formatted number.
+ *
+ * @example
+ * ```ts
+ * formatNumber();
+ * ```
  */
 export const formatNumber = (context?: string): string => {
   return formatGeneric(config.formatNumber, context);
@@ -274,6 +369,11 @@ export const formatNumber = (context?: string): string => {
  * Formats a compact number according to the current language and context.
  * @param {string} [context] - The context of the compact number.
  * @returns {string} The formatted compact number.
+ *
+ * @example
+ * ```ts
+ * formatNumberCompact();
+ * ```
  */
 export const formatNumberCompact = (context?: string): string => {
   return formatGeneric(config.formatNumberCompact, context);
@@ -283,6 +383,11 @@ export const formatNumberCompact = (context?: string): string => {
  * Formats a currency according to the current language and context.
  * @param {string} [context] - The context of the currency.
  * @returns {string} The formatted currency.
+ *
+ * @example
+ * ```ts
+ * formatCurrency();
+ * ```
  */
 export const formatCurrency = (context?: string): string => {
   return formatGeneric(config.formatCurrency, context);

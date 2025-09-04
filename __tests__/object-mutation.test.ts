@@ -21,4 +21,28 @@ describe('object-mutation utilities', () => {
     expect(copy).toEqual({ a: { b: 1 } });
     expect(flat).toBeUndefined();
   });
+
+  test('deepMerge can use a fixer function', () => {
+    deepMerge.setConfig({ fix: () => ({ fixed: true }) });
+    const result = deepMerge({ a: 1 }, { b: 2 });
+    expect(result).toEqual({ fixed: true });
+  });
+
+  test('transformJson supports hooks and filter string', () => {
+    const json = { a: { b: { c: 1 } }, c: 2, d: 3 };
+    const [mod] = transformJson(json, {
+      beforeFunc: ({ key }) => (key === 'a' ? { merge: { pre: true } } : undefined),
+      duringFunc: ({ key }) => (key === 'b' ? { merge: { inner: true } } : undefined),
+      afterFunc: ({ key }) => (key === 'a' ? { merge: { post: true } } : undefined),
+      nonObjectFunc: ({ key }) => (key === 'd' ? { merge: 1 } : undefined),
+      filter: 'c'
+    });
+    expect(mod).toEqual({ a: { b: { c: 1, inner: true }, pre: true, post: true }, c: 2, d: 4 });
+  });
+
+  test('transformJson handles array and function filters', () => {
+    const json = { a: 1, b: 2, c: 3 };
+    transformJson(json, { filter: ['b'] });
+    transformJson(json, { filter: ({ key }) => key !== 'c' });
+  });
 });

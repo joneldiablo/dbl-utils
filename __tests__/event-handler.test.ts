@@ -55,5 +55,24 @@ describe('EventHandler', () => {
     expect(cacheKeyExist()).toBe(false);
   });
 
+  it('supports multiple callbacks for the same wildcard pattern', async () => {
+    const cb1 = jest.fn();
+    const cb2 = jest.fn();
+    eventHandler.subscribe('user.*', cb1, 'id1');
+    eventHandler.subscribe('user.*', cb2, 'id2');
+    await eventHandler.dispatch('user.login');
+    expect(cb1).toHaveBeenCalled();
+    expect(cb2).toHaveBeenCalled();
+  });
+
+  it('removes pattern subscriptions from cache', async () => {
+    const cb = jest.fn();
+    eventHandler.subscribe('test*', cb, 'id');
+    await eventHandler.dispatch('testValue');
+    expect((eventHandler as any).cache.testValue).toBeDefined();
+    eventHandler.unsubscribe('test*', 'id');
+    expect((eventHandler as any).cache.testValue).toBeUndefined();
+  });
+
 });
 

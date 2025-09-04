@@ -12,6 +12,18 @@ interface RequestOptions {
 
 /**
  * A queue to manage fetch requests with unique identification.
+ *
+ * Useful to deduplicate concurrent network calls to the same URL.
+ *
+ * @example
+ * ```ts
+ * const queue = new FetchQueue(fetch);
+ * const [a, b] = await Promise.all([
+ *   queue.addRequest('https://example.com/data'),
+ *   queue.addRequest('https://example.com/data')
+ * ]);
+ * // only one HTTP request is performed
+ * ```
  */
 export default class FetchQueue {
   private queue: Record<string, RequestOptions> = {};

@@ -7,6 +7,13 @@ interface Pattern {
 
 /**
  * Class EventHandler to manage event subscriptions and dispatching.
+ *
+ * @example
+ * ```ts
+ * const handler = new EventHandler();
+ * handler.subscribe('say', msg => console.log(msg), 'id1');
+ * handler.dispatch('say', 'hello');
+ * ```
  */
 export class EventHandler {
   private events: Record<string, Array<[EventCallback, string]>>;
@@ -45,6 +52,11 @@ export class EventHandler {
    * @param event - The event name to dispatch.
    * @param data - Data to be passed to the callback function.
    * @returns A promise resolved with an array of callback responses.
+   *
+   * @example
+   * ```ts
+   * await handler.dispatch('say', 'hi');
+   * ```
    */
   async dispatch(event: string, ...data: any[]): Promise<any[]> {
     if (this.cache[event]) {
@@ -67,6 +79,11 @@ export class EventHandler {
    * @param eventString - The event name or pattern to subscribe to.
    * @param callback - The callback function to execute when the event is dispatched.
    * @param id - An identifier for the subscription, used for unsubscribing.
+   *
+   * @example
+   * ```ts
+   * handler.subscribe('user.*', cb, 'id');
+   * ```
    */
   subscribe(eventString: string, callback: EventCallback, id: string): void {
     const events = eventString.split(/[\s,]+/);
@@ -94,6 +111,11 @@ export class EventHandler {
    * Unsubscribes from an event or pattern of events.
    * @param eventString - The event name or pattern to unsubscribe from.
    * @param id - The identifier of the subscription to remove.
+   *
+   * @example
+   * ```ts
+   * handler.unsubscribe('user.*', 'id');
+   * ```
    */
   unsubscribe(eventString: string, id: string): void {
     const events = eventString.split(/[\s,]+/);

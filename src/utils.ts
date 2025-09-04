@@ -30,6 +30,12 @@ export type IArrayString = (null | undefined | boolean | string | IArrayString)[
  * @param {string[]} arrayStrings - Array of strings to split and flatten.
  * @param {string} separator - Separator to use for splitting.
  * @returns {string[]} Flattened and splitted array of strings.
+ *
+ * @example
+ * ```ts
+ * splitAndFlat(['tag1 tag2', 'tag2'], ' ');
+ * // => ['tag1', 'tag2']
+ * ```
  */
 export function splitAndFlat(
   arrayStrings: IArrayString,
@@ -121,6 +127,12 @@ function transform(value: number, limit: number | number[]): number {
  * Evaluates the similarity of a set of colors.
  * @param cls - Array of colors in hex format.
  * @returns A similarity score between 0 and 1, where 0 indicates all colors are distinct and 1 indicates all are similar.
+ *
+ * @example
+ * ```ts
+ * evaluateColorSimilarity(['#ffffff', '#fffffe']);
+ * // => value close to 1
+ * ```
  */
 export function evaluateColorSimilarity(colors: string[]): number {
   let totalDistance = 0;
@@ -145,6 +157,12 @@ export function evaluateColorSimilarity(colors: string[]): number {
  * Normalizes a string by converting it to lowercase and removing diacritical marks.
  * @param {string} str - The string to normalize.
  * @returns {string} The normalized string.
+ *
+ * @example
+ * ```ts
+ * normalize('Árbol');
+ * // => 'arbol'
+ * ```
  */
 export function normalize(str: string = ''): string {
   return str.toLowerCase()
@@ -156,6 +174,12 @@ export function normalize(str: string = ''): string {
  * Converts a string to a slug.
  * @param {string} str - The string to slugify.
  * @returns {string} The slugified string.
+ *
+ * @example
+ * ```ts
+ * slugify('Hello World!');
+ * // => 'hello-world'
+ * ```
  */
 export function slugify(str: string = ''): string {
   return normalize(str)
@@ -167,6 +191,12 @@ export function slugify(str: string = ''): string {
 /**
  * Generates a random four-character string consisting of hexadecimal digits.
  * @returns {string} The random four-character string.
+ *
+ * @example
+ * ```ts
+ * randomS4();
+ * // => '9f3b'
+ * ```
  */
 export function randomS4(): string {
   return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -178,6 +208,12 @@ export function randomS4(): string {
  * @param {number} [length=16] - The length of the generated string. Default is 16.
  * @param {string} [characters='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'] - A string representing the characters to be used. Default includes uppercase, lowercase letters, and digits.
  * @returns {string} A random string composed of the specified characters.
+ *
+ * @example
+ * ```ts
+ * randomString(5);
+ * // => e.g., 'aB3dE'
+ * ```
  */
 export function randomString(
   length: number = 16,
@@ -261,6 +297,12 @@ export function timeChunks(options: { from: string | number, to: string | number
  * Resolves the promise after a given timeout.
  * @param {number} timeout - Milliseconds to wait before resolving.
  * @returns {Promise<void>} The promise that resolves after the timeout.
+ *
+ * @example
+ * ```ts
+ * await delay(1000);
+ * // waits for one second
+ * ```
  */
 export function delay(timeout: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -272,6 +314,12 @@ export function delay(timeout: number): Promise<void> {
  * Computes the hash value of a string.
  * @param {string} string - The string to hash.
  * @returns {number} The computed hash value.
+ *
+ * @example
+ * ```ts
+ * hash('abc');
+ * // => deterministic numeric hash
+ * ```
  */
 export function hash(string: string): number {
   let hash = 0, i, chr;
@@ -286,6 +334,13 @@ export function hash(string: string): number {
 /**
  * Linear Congruential Generator (LCG) class for pseudo-random number generation.
  * @class LCG
+ *
+ * @example
+ * ```ts
+ * const gen = new LCG(123);
+ * gen.random();
+ * // => 0.596735... (deterministic)
+ * ```
  */
 export class LCG {
   private a: number;
