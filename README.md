@@ -168,12 +168,40 @@ transformJson({ a: { b: 1 } }, { filter: 'a' }); // extract subset
 
 ### resolve-refs
 
-Replace `$path/to/value` placeholders using a schema.
+Advanced reference resolution with support for global and relative references.
+
+- **Global References**: `"$path/to/value"` - Simple reference to values in the schema
+- **String Interpolation**: `"${path/to/value}"` - Embed references within strings
+- **Object Templates**: `{ ref: "path/to/template", prop: "value" }` - Extend referenced objects (note: `$` is optional in `ref`)
+- **Relative References**: `"$./path"` and `"${./path}"` - Reference values within the current object context
+- **Template System**: Use the `"."` key to define relative references that are resolved after object merging
 
 ```ts
 import resolveRefs from 'dbl-utils';
 
-resolveRefs({ num: '$values/a' }, { values: { a: 1 } }).num; // 1
+// Basic usage
+const data = { values: { a: 1 } };
+const obj = { num: "$values/a" };
+resolveRefs(obj, data).num; // 1
+
+// Template system with relative references
+const data = {
+  user: { ref: "templates/userTemplate", name: "Alice", age: 25 },
+  templates: {
+    userTemplate: {
+      name: "Default",
+      age: 0,
+      ".": {
+        displayName: "User: ${./name}",
+        description: "${./name} is ${./age} years old"
+      }
+    }
+  }
+};
+
+const result = resolveRefs(data);
+// result.user.displayName = "User: Alice"
+// result.user.description = "Alice is 25 years old"
 ```
 
 ### utils
@@ -291,6 +319,11 @@ This project uses Jest with ts-jest. New tests cover the `i18n` and `object-muta
 
 ## Recent Changes
 
+- **Enhanced resolve-refs module**: Added support for relative references with `$./` and `${./}` syntax
+  - New template system using the `"."` key for relative references
+  - Ability to create reusable templates that can be extended with different values
+  - Support for references that point to other references (recursive resolution)
+  - Comprehensive unit tests covering all relative reference scenarios
 - Fixed handling of numeric keys in `unflatten` so arrays are reconstructed correctly.
 - Added unit tests for the `i18n` and `object-mutation` modules.
 - Expanded coverage with additional tests for `utils`, `format-value`, and `i18n`.
