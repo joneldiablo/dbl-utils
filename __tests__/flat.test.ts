@@ -42,6 +42,33 @@ describe("flatten", () => {
     const result = flatten(input, { ommitFn: (key) => key === "c" });
     expect(result).toEqual(expected);
   });
+
+  it("should flatten nested arrays correctly", () => {
+    const input = { a: [[1, 2], 3] };
+    const expected = { "a.0.0": 1, "a.0.1": 2, "a.1": 3 };
+    const result = flatten(input);
+    expect(result).toEqual(expected);
+  });
+
+  it("should handle empty arrays", () => {
+    const input = { a: [] };
+    const expected = {};
+    const result = flatten(input);
+    expect(result).toEqual(expected);
+  });
+
+  it("should flatten mixed types", () => {
+    const input = { a: "value", b: 10, c: false, d: { e: [1, "two"] } };
+    const expected = {
+      a: "value",
+      b: 10,
+      c: false,
+      "d.e.0": 1,
+      "d.e.1": "two",
+    };
+    const result = flatten(input);
+    expect(result).toEqual(expected);
+  });
 });
 
 describe("unflatten", () => {

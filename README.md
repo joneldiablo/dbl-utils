@@ -121,7 +121,39 @@ Below are the main modules available in `dbl-utils`:
   - *deepMerge*
   - *transformJson*
 - **resolve-refs**
-  - *resolveRefs*
+  - *resolveRefs* - Advanced reference resolution with support for global and relative references
+    - **Global References**: `"$path/to/value"` - Simple reference to values in the schema
+    - **String Interpolation**: `"${path/to/value}"` - Embed references within strings
+    - **Object Templates**: `{ ref: "$path/to/template", prop: "value" }` - Extend referenced objects
+    - **Relative References**: `"$./path"` and `"${./path}"` - Reference values within the current object context
+    - **Template System**: Use the `"."` key to define relative references that are resolved after object merging
+    
+    **Examples:**
+    ```javascript
+    // Basic usage
+    const data = { config: { apiUrl: "https://api.com" } };
+    const obj = { url: "$config/apiUrl" };
+    resolveRefs(obj, data); // { url: "https://api.com" }
+    
+    // Template system with relative references
+    const data = {
+      user: { ref: "$templates/userTemplate", name: "Alice", age: 25 },
+      templates: {
+        userTemplate: {
+          name: "Default",
+          age: 0,
+          ".": {
+            displayName: "User: ${./name}",
+            description: "${./name} is ${./age} years old"
+          }
+        }
+      }
+    };
+    
+    const result = resolveRefs(data);
+    // result.user.displayName = "User: Alice"
+    // result.user.description = "Alice is 25 years old"
+    ```
 - **utils**
   - *sliceIntoChunks*
   - *splitAndFlat*
@@ -140,13 +172,34 @@ Below are the main modules available in `dbl-utils`:
 
 For a detailed description of each module and function, visit the [full documentation](https://joneldiablo.github.io/dbl-utils/modules.html) automatically generated with Typedoc. The documentation includes usage examples and in-depth explanations of each function.
 
+## Testing
+
+Run the test suite with:
+
+```bash
+npm test
+```
+
+This project uses Jest with ts-jest. New tests cover the `i18n` and `object-mutation` modules.
+
 ## Recent Changes
 
+- **Enhanced resolve-refs module**: Added support for relative references with `$./` and `${./}` syntax
+  - New template system using the `"."` key for relative references
+  - Ability to create reusable templates that can be extended with different values
+  - Support for references that point to other references (recursive resolution)
+  - Comprehensive unit tests covering all relative reference scenarios
 - Fixed handling of numeric keys in `unflatten` so arrays are reconstructed correctly.
+- Added unit tests for the `i18n` and `object-mutation` modules.
+- Expanded coverage with additional tests for `utils`, `format-value`, and `i18n`.
 
 ## TODO
 
 - Move number compact formatting to the i18n module.
+
+## Development & Testing
+
+When developing or debugging tests, use `yarn test -- <pattern>` to run only the relevant test cases.
 
 ## License
 

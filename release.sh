@@ -34,7 +34,7 @@ while getopts ":-:" opt; do
   esac
 done
 
-# Check for uncommitted changes
+##------ Check for uncommitted changes
 if git diff-index --quiet HEAD --; then
   echo "No uncommitted changes. Continuing..."
 else
@@ -50,6 +50,7 @@ if [ "$current_branch" != "master" ]; then
   # Switch to master branch
   git checkout master
   git merge -
+
   # Check for merge conflicts
   if [ $? -ne 0 ]; then
     echo "Merge conflicts detected. Please resolve them and then run the script again."
