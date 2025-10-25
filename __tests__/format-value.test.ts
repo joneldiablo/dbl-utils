@@ -61,6 +61,19 @@ describe("formatValue", () => {
     ).toBe("2024-01-02 03:04");
   });
 
+  it("formats dates and times format without 'T'", () => {
+    const date = "2024-01-02 03:04:05";
+    expect(
+      formatValue(date, { format: "date", formatConf: "YYYY-MM-DD" })
+    ).toBe("2024-01-02");
+    expect(formatValue(date, { format: "time", formatConf: "HH:mm" })).toBe(
+      "03:04"
+    );
+    expect(
+      formatValue(date, { format: "date-time", formatConf: "YYYY-MM-DD HH:mm" })
+    ).toBe("2024-01-02 03:04");
+  });
+
   it("formats numbers in compact form", () => {
     const localeSpy = jest.spyOn(numeral, "locale");
     const result = formatValue(1500, { format: "number-compact" });
@@ -88,16 +101,4 @@ describe("formatValue", () => {
     );
   });
 
-  it("formats dates and times", () => {
-    const date = "2024-01-02 03:04:05";
-    expect(
-      formatValue(date, { format: "date", formatConf: "YYYY-MM-DD" })
-    ).toBe("2024-01-02");
-    expect(formatValue(date, { format: "time", formatConf: "HH:mm" })).toBe(
-      "03:04"
-    );
-    expect(
-      formatValue(date, { format: "date-time", formatConf: "YYYY-MM-DD HH:mm" })
-    ).toBe("2024-01-02 03:04");
-  });
 });
