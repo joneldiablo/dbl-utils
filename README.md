@@ -3,6 +3,7 @@
 `dbl-utils` is a JavaScript/TypeScript utility library designed to simplify common application development tasks. This collection includes functions for event handling, queue processing, text manipulation, and date and currency formatting, among others.
 
 [![Documentation](https://img.shields.io/badge/docs-view-green.svg)](https://joneldiablo.github.io/dbl-utils/modules.html)
+[![DeepWiki Analysis](https://img.shields.io/badge/DeepWiki-analysis-blue.svg)](https://deepwiki.com/joneldiablo/dbl-utils)
 
 ## Table of Contents
 
@@ -306,6 +307,8 @@ gen.random(); // 0.5967...
 ## Documentation
 
 For a detailed description of each module and function, visit the [full documentation](https://joneldiablo.github.io/dbl-utils/modules.html) automatically generated with Typedoc. The documentation includes usage examples and in-depth explanations of each function.
+
+For an in-depth analysis of the project architecture, codebase structure, and implementation details, check out the comprehensive [DeepWiki analysis](https://deepwiki.com/joneldiablo/dbl-utils).
 
 ## Testing
 
