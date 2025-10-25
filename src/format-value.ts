@@ -27,10 +27,16 @@ interface FormatConfig {
 
 /**
  * Formats a value based on the provided configuration.
- * 
+ *
  * @param value - The value to format
  * @param conf - Configuration options for formatting
  * @returns The formatted value or the original value if the format is not specified
+ *
+ * @example
+ * ```ts
+ * formatValue(1000, { format: 'currency', currency: 'USD' });
+ * // => "$1,000.00" in an English locale
+ * ```
  */
 export default function formatValue(value: any, conf: FormatConfig): any {
   if (!conf?.format) return value;
@@ -38,8 +44,6 @@ export default function formatValue(value: any, conf: FormatConfig): any {
   switch (conf.format) {
     case 'number-compact':
     case 'numbercompact': {
-      // TODO: move to i18n
-      // TODO: move to i18n
       numeral.locale(getLang());
       return numeral(value).format(conf.formatConf as string || formatNumberCompact(conf.context));
     }

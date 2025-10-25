@@ -74,6 +74,12 @@ function effectiveDeepMerge(target: any, ...sources: any[]): any {
  * @param options - Options for mutation, ommit keys and additional data.
  * @param parentKey - Internal tracking key for recursion.
  * @returns The mutated and merged target object.
+ *
+ * @example
+ * ```ts
+ * await mergeWithMutation({ a: { b: 1 } }, { mutation: () => ({ c: 2 }) });
+ * // => { a: { b: 1, c: 2 } }
+ * ```
  */
 export async function mergeWithMutation(
   target: any,
@@ -96,6 +102,11 @@ export async function mergeWithMutation(
  * @param target - The target object where other objects will be merged.
  * @param sources - Other objects to be merged into the target.
  * @returns The merged object.
+ *
+ * @example
+ * ```ts
+ * deepMerge({}, { a: 1 }, { b: 2 }); // { a: 1, b: 2 }
+ * ```
  */
 export function deepMerge(target: any, ...sources: any[]): any {
   const mergedObject = effectiveDeepMerge(target, ...sources);
@@ -108,6 +119,12 @@ export function deepMerge(target: any, ...sources: any[]): any {
  * fixer function before calling {@link deepMerge}.
  *
  * @param config - Configuration options.
+ *
+ * @example
+ * ```ts
+ * deepMerge.setConfig({ fix: () => ({ fixed: true }) });
+ * deepMerge({}, { a: 1 }); // { fixed: true }
+ * ```
  */
 deepMerge.setConfig = (config: ConfigOptions) => {
   useConfig = config;
@@ -119,6 +136,12 @@ deepMerge.setConfig = (config: ConfigOptions) => {
  * @param json - The JSON object to be transformed.
  * @param options - Options for the mutation functions.
  * @returns An array with the modified object and the flattened object.
+ *
+ * @example
+ * ```ts
+ * transformJson({ a: { b: 1 } }, { filter: 'a' });
+ * // => [{ a: { b: 1 } }, { a: { b: 1 } }]
+ * ```
  */
 export function transformJson(json: any, options: TransformOptions = {}): [any, any] {
   const objCopy = JSON.parse(JSON.stringify(json));
