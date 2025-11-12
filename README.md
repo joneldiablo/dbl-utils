@@ -169,41 +169,198 @@ transformJson({ a: { b: 1 } }, { filter: 'a' }); // extract subset
 
 ### resolve-refs
 
-Advanced reference resolution with support for global and relative references.
+Advanced reference resolution system for dynamic object composition and template inheritance. Perfect for configuration management, content templating, and complex data transformations.
 
-- **Global References**: `"$path/to/value"` - Simple reference to values in the schema
-- **String Interpolation**: `"${path/to/value}"` - Embed references within strings
-- **Object Templates**: `{ ref: "path/to/template", prop: "value" }` - Extend referenced objects (note: `$` is optional in `ref`)
-- **Relative References**: `"$./path"` and `"${./path}"` - Reference values within the current object context
-- **Template System**: Use the `"."` key to define relative references that are resolved after object merging
+#### Core Features
 
+- **🌐 Global References**: Access any value in your data schema
+- **🔗 Relative References**: Reference values within the current object context  
+- **📝 String Interpolation**: Embed references within strings seamlessly
+- **🎨 Template Inheritance**: Create reusable object templates with property overrides
+- **⚙️ Custom Rules & Tasks**: Define advanced transformation logic
+- **🔄 Recursive Resolution**: Handle complex nested reference chains
+
+#### Reference Types
+
+**1. Global References**
 ```ts
-import resolveRefs from 'dbl-utils';
+const config = { api: { url: "https://api.com", key: "secret" } };
+const settings = {
+  endpoint: "$api/url",           // Direct reference → "https://api.com"
+  auth: "Bearer ${api/key}",      // String interpolation → "Bearer secret"
+  full: "${api/url}/v1/users"     // Mixed interpolation → "https://api.com/v1/users"
+};
+```
 
-// Basic usage
-const data = { values: { a: 1 } };
-const obj = { num: "$values/a" };
-resolveRefs(obj, data).num; // 1
-
-// Template system with relative references
+**2. Template Inheritance**
+```ts
 const data = {
-  user: { ref: "templates/userTemplate", name: "Alice", age: 25 },
+  // Base template
+  userTemplate: { name: "Guest", role: "viewer", active: false },
+  
+  // Inherit and override properties
+  admin: { ref: "$userTemplate", name: "Admin", role: "admin", active: true },
+  john: { ref: "$userTemplate", name: "John Doe" }
+};
+
+const result = resolveRefs(data);
+// result.admin = { name: "Admin", role: "admin", active: true }
+// result.john = { name: "John Doe", role: "viewer", active: false }
+```
+
+**3. Relative References with Template System**
+```ts
+const data = {
+  user1: { ref: "$templates/user", firstName: "Alice", lastName: "Smith" },
+  user2: { ref: "$templates/user", firstName: "Bob", lastName: "Jones" },
+  
   templates: {
-    userTemplate: {
-      name: "Default",
-      age: 0,
+    user: {
+      firstName: "",
+      lastName: "",
       ".": {
-        displayName: "User: ${./name}",
-        description: "${./name} is ${./age} years old"
+        // These resolve AFTER template merging
+        fullName: "${./firstName} ${./lastName}",           // Relative interpolation
+        email: "${./firstName}.${./lastName}@company.com",  // Complex relative refs
+        profile: {
+          displayName: "$./fullName",    // Reference to another relative ref
+          initials: "${./firstName/0}${./lastName/0}"  // Access array/string indices
+        }
       }
     }
   }
 };
 
 const result = resolveRefs(data);
-// result.user.displayName = "User: Alice"
-// result.user.description = "Alice is 25 years old"
+// result.user1.fullName = "Alice Smith"
+// result.user1.email = "Alice.Smith@company.com"  
+// result.user1.profile.displayName = "Alice Smith"
+// result.user1.profile.initials = "AS"
 ```
+
+#### Advanced Usage
+
+**Configuration Management**
+```ts
+const config = {
+  // Environment settings
+  env: { 
+    name: "production",
+    domain: "myapp.com",
+    apiVersion: "v2"
+  },
+  
+  // Service definitions using templates
+  services: {
+    auth: { ref: "$templates/service", path: "/auth", timeout: 5000 },
+    users: { ref: "$templates/service", path: "/users", port: 8080 },
+    payments: { ref: "$templates/service", path: "/payments", ssl: true }
+  },
+  
+  templates: {
+    service: {
+      path: "/",
+      port: 3000,
+      timeout: 30000,
+      ssl: false,
+      ".": {
+        // Dynamic URL generation
+        baseUrl: "http${./ssl ? 's' : ''}://${env/domain}:${./port}",
+        fullUrl: "${./baseUrl}/${env/apiVersion}${./path}",
+        
+        // Service configuration
+        config: {
+          endpoint: "$./fullUrl",
+          timeout: "$./timeout",
+          retries: 3,
+          headers: {
+            "X-Service-Name": "${env/name}",
+            "X-API-Version": "${env/apiVersion}"
+          }
+        }
+      }
+    }
+  }
+};
+
+const result = resolveRefs(config);
+// result.services.auth.fullUrl = "http://myapp.com:3000/v2/auth"
+// result.services.users.fullUrl = "http://myapp.com:8080/v2/users"
+// result.services.payments.fullUrl = "https://myapp.com:3000/v2/payments"
+```
+
+**Custom Rules and Tasks**
+```ts
+const data = {
+  users: ["Alice", "Bob", "Charlie"],
+  products: [{ name: "Widget", price: 10 }, { name: "Gadget", price: 25 }]
+};
+
+const template = {
+  welcomeMessage: "$greetUsers",
+  productSummary: "$summarizeProducts",
+  totalValue: "$calculateTotal"
+};
+
+// Define custom processing rules
+const rules = {
+  "$greetUsers": ["join", "$users", " and "],
+  "$summarizeProducts": ["iterate", "$products", "product"],
+  "$calculateTotal": ["sum", "$products", "price"]
+};
+
+// Custom task implementations
+const extraTasks = {
+  sum: (array: any[], property: string) => 
+    array.reduce((total, item) => total + item[property], 0),
+  
+  format: (template: string, ...values: any[]) =>
+    template.replace(/{(\d+)}/g, (_, i) => values[i]),
+    
+  conditional: (condition: boolean, trueVal: any, falseVal: any) =>
+    condition ? trueVal : falseVal
+};
+
+const result = resolveRefs(template, data, rules, extraTasks);
+// result.welcomeMessage = "Alice and Bob and Charlie"
+// result.totalValue = 35
+```
+
+#### Built-in Tasks
+
+- **`iterate(array, itemName)`** - Process array items with current schema context
+- **`join(values, separator, ...extras)`** - Join arrays or concatenate values
+- **`ignore(path, fallback)`** - Safe property access with fallback values
+- **`if(condition, trueValue, falseValue)`** - Conditional value resolution
+
+#### API Reference
+
+```ts
+resolveRefs<T>(
+  object: ResolvableValue,      // Object/array with references to resolve
+  schema?: Record<string, any>, // Base schema for global references
+  rules?: ResolveRefsRules,     // Custom rule definitions
+  extraTasks?: ResolveRefsTasks // Additional task implementations
+): T
+```
+
+#### Best Practices
+
+1. **🏗️ Structure**: Organize templates in dedicated sections (e.g., `templates/`, `definitions/`)
+2. **📋 Naming**: Use descriptive paths like `config/database/url` over abbreviated versions
+3. **🎯 Performance**: Avoid deep circular references and excessive nesting
+4. **🔒 Type Safety**: Define TypeScript interfaces for your schema structure
+5. **🧪 Testing**: Test complex reference chains with various data combinations
+
+#### Real-World Examples
+
+For comprehensive examples and advanced use cases, see the [detailed examples documentation](./examples/resolve-refs-examples.md).
+
+- **Multi-environment Configuration**: Different API endpoints per environment
+- **Component Templates**: Reusable UI component configurations
+- **Dynamic Content**: Blog posts with shared metadata and custom overrides
+- **API Documentation**: Auto-generated endpoint documentation from templates
+- **Feature Flags**: Conditional configuration based on environment/user settings
 
 ### utils
 
@@ -322,6 +479,12 @@ This project uses Jest with ts-jest. New tests cover the `i18n` and `object-muta
 
 ## Recent Changes
 
+- **Comprehensive resolve-refs documentation**: Completely redesigned documentation with:
+  - Enhanced JSDoc comments with detailed examples and use cases
+  - Full TypeScript type definitions and interfaces
+  - Comprehensive README section with visual examples
+  - Real-world usage examples including configuration management, API documentation, and component systems
+  - Advanced examples covering feature flags, e-commerce catalogs, and multi-environment setups
 - **Enhanced resolve-refs module**: Added support for relative references with `$./` and `${./}` syntax
   - New template system using the `"."` key for relative references
   - Ability to create reusable templates that can be extended with different values

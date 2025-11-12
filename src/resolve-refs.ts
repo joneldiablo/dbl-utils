@@ -1,78 +1,119 @@
 import { deepMerge } from "./object-mutation";
 import { unflatten } from "./flat";
+import type { 
+  ResolveRefsRules, 
+  ResolveRefsTasks, 
+  ResolvableValue 
+} from "./types";
 
 /**
- * Resolve `$` references within an object or array using a provided schema.
+ * Resolve references within objects and arrays using advanced reference resolution.
+ * 
+ * This powerful utility enables dynamic object composition through multiple reference types:
+ * global references, relative references, string interpolation, and template inheritance.
+ * Perfect for configuration management, dynamic content generation, and object templating.
  *
- * References are resolved recursively allowing simple string lookups and
- * advanced operations defined by `rules`.
- *
- * @param object - Object or array containing `$path/to/value` references.
- * @param schema - Optional schema object used as the base for lookups.
- *   Defaults to a deep clone of `object`.
- * @param rules - Custom rule definitions used when a reference matches a rule
- *   key. Each rule maps to a tuple where the first element is the task name and
- *   the rest are arguments passed to that task.
- * @param extraTasks - Additional task implementations that can be referenced in
- *   `rules`.
- * @returns The object with all references resolved.
+ * @param object - The source object or array containing references to resolve.
+ *                 References use `$path/to/value` syntax for global lookups or 
+ *                 `$./path` for relative references.
+ * @param schema - Schema object used as the base for global reference lookups.
+ *                 If not provided, uses a deep clone of the source object.
+ *                 This is where `$path/to/value` references are resolved against.
+ * @param rules - Custom rule definitions for advanced reference processing.
+ *                Each rule maps a reference key to a tuple `[taskName, ...args]`.
+ *                Built-in tasks: 'iterate', 'join', 'ignore', 'if'.
+ * @param extraTasks - Additional custom task functions that can be used in rules.
+ *                     Each task receives the resolved arguments and should return a value.
+ * @returns A new object with all references resolved and templates expanded.
  *
  * ## Reference Types
  * 
- * ### Global References
- * - `"$path/to/value"` - Simple reference to a value in the schema
- * - `"${path/to/value}"` - String interpolation with reference
- * - `"prefix-${path/to/value}-suffix"` - Mixed string with reference
+ * ### 1. Global References
+ * Reference values anywhere in the schema using absolute paths:
+ * - `"$path/to/value"` - Direct reference to a value
+ * - `"${path/to/value}"` - String interpolation (embeds value in string)
+ * - `"prefix-${path/to/value}-suffix"` - Mixed string with interpolated values
  * 
- * ### Object References with Modifications
- * - `{ ref: "$path/to/template", prop1: "newValue" }` - Extends the referenced object
+ * ### 2. Object Template References
+ * Extend and modify referenced objects:
+ * - `{ ref: "$path/to/template", newProp: "value" }` - Template inheritance
+ * - `{ ref: "path/to/template", existingProp: "override" }` - Property override
  * 
- * ### Relative References (NEW)
- * - `"$./path/to/value"` - Reference relative to current object context
- * - `"${./path/to/value}"` - String interpolation with relative reference
- * - `"."` key - Contains relative references processed after object merge
+ * ### 3. Relative References
+ * Reference values within the current object context:
+ * - `"$./property"` - Direct relative reference
+ * - `"${./nested/property}"` - Relative string interpolation
+ * - `"${./path}-${./other}"` - Multiple relative references in strings
+ * 
+ * ### 4. Template System with Deferred Resolution
+ * Use the special `"."` key for references resolved after template merging:
+ * - `"."` object contains references processed after base template + overrides
+ * - Enables templates to reference their final merged state
+ * - Supports recursive resolution until stable state is reached
  *
- * ## Template System with Relative References
+ * ## Advanced Features
  * 
- * The `"."` key in an object contains references that are resolved relative to the 
- * final merged object, enabling powerful template systems where templates can 
- * reference their own merged values.
+ * ### Custom Rules and Tasks
+ * Define reusable logic for complex transformations:
+ * ```ts
+ * const rules = {
+ *   "$users": ["iterate", "$data/users", "currentUser"],
+ *   "$joinNames": ["join", "$people", ", ", "$extraPeople"]
+ * };
+ * 
+ * const extraTasks = {
+ *   uppercase: (value: string) => value.toUpperCase(),
+ *   calculate: (a: number, b: number) => a + b
+ * };
+ * ```
+ * 
+ * ### Built-in Tasks
+ * - `iterate(array, itemName)` - Process array items with template
+ * - `join(array, separator, ...extra)` - Join arrays with separator
+ * - `ignore(path, fallback)` - Safe lookup with fallback
+ * - `if(condition, trueValue, falseValue)` - Conditional resolution
  *
  * @example
- * Basic usage:
+ * Basic global references:
  * ```ts
- * const data = { values: { a: 1 } };
- * const obj = { num: "$values/a" };
- * const result = resolveRefs(obj, data);
- * console.log(result.num); // 1
+ * const config = { api: { url: "https://api.com", key: "abc123" } };
+ * const settings = { endpoint: "$api/url", auth: "Bearer ${api/key}" };
+ * 
+ * const result = resolveRefs(settings, config);
+ * // { endpoint: "https://api.com", auth: "Bearer abc123" }
  * ```
  * 
  * @example
- * String interpolation:
- * ```ts
- * const data = { user: { name: "John" }, config: { version: "v1" } };
- * const obj = { greeting: "Hello ${user/name}!", url: "${config/version}/api" };
- * const result = resolveRefs(obj, data);
- * console.log(result.greeting); // "Hello John!"
- * console.log(result.url); // "v1/api"
- * ```
- * 
- * @example
- * Template system with relative references:
+ * Template inheritance with property overrides:
  * ```ts
  * const data = {
- *   user1: { ref: "$templates/userTemplate", name: "Alice", age: 25 },
- *   user2: { ref: "$templates/userTemplate", name: "Bob", age: 30 },
+ *   defaultUser: { name: "Guest", role: "viewer", active: false },
+ *   admin: { ref: "$defaultUser", name: "Admin", role: "admin", active: true },
+ *   viewer: { ref: "$defaultUser", name: "John" }
+ * };
+ * 
+ * const result = resolveRefs(data);
+ * // result.admin = { name: "Admin", role: "admin", active: true }
+ * // result.viewer = { name: "John", role: "viewer", active: false }
+ * ```
+ * 
+ * @example
+ * Relative references with template system:
+ * ```ts
+ * const data = {
+ *   user1: { ref: "$templates/user", firstName: "Alice", lastName: "Smith" },
+ *   user2: { ref: "$templates/user", firstName: "Bob", lastName: "Jones" },
  *   templates: {
- *     userTemplate: {
- *       name: "Default",
- *       age: 0,
+ *     user: {
+ *       firstName: "",
+ *       lastName: "",
+ *       email: "",
  *       ".": {
- *         displayName: "User: ${./name}",
- *         description: "${./name} is ${./age} years old",
+ *         fullName: "${./firstName} ${./lastName}",
+ *         email: "${./firstName}.${./lastName}@company.com",
  *         profile: {
- *           username: "$./name",
- *           isAdult: "$./age" // This would need custom logic for boolean conversion
+ *           displayName: "$./fullName",
+ *           username: "$./firstName"
  *         }
  *       }
  *     }
@@ -80,48 +121,85 @@ import { unflatten } from "./flat";
  * };
  * 
  * const result = resolveRefs(data);
- * console.log(result.user1.displayName); // "User: Alice"
- * console.log(result.user1.description); // "Alice is 25 years old"
- * console.log(result.user2.displayName); // "User: Bob"
+ * // result.user1.fullName = "Alice Smith"
+ * // result.user1.email = "Alice.Smith@company.com"
+ * // result.user1.profile.displayName = "Alice Smith"
  * ```
  * 
  * @example
- * Mixed global and relative references:
+ * Configuration management with mixed references:
  * ```ts
- * const data = {
- *   config: { apiUrl: "https://api.example.com", version: "v1" },
- *   service: {
- *     ref: "$templates/serviceTemplate",
- *     endpoint: "/users",
- *     timeout: 5000
+ * const config = {
+ *   env: { baseUrl: "https://api.prod.com", version: "v2" },
+ *   services: {
+ *     auth: { ref: "$templates/service", path: "/auth", timeout: 5000 },
+ *     users: { ref: "$templates/service", path: "/users", timeout: 3000 }
  *   },
  *   templates: {
- *     serviceTemplate: {
- *       endpoint: "/default",
- *       timeout: 3000,
+ *     service: {
+ *       path: "/",
+ *       timeout: 30000,
+ *       retries: 3,
  *       ".": {
- *         fullUrl: "${config/apiUrl}/${config/version}${./endpoint}",
- *         settings: {
- *           url: "$./fullUrl", // References another relative reference
- *           timeout: "$./timeout"
+ *         url: "${env/baseUrl}/${env/version}${./path}",
+ *         config: {
+ *           endpoint: "$./url",
+ *           timeout: "$./timeout",
+ *           retries: "$./retries"
  *         }
  *       }
  *     }
  *   }
  * };
  * 
- * const result = resolveRefs(data);
- * console.log(result.service.fullUrl); // "https://api.example.com/v1/users"
- * console.log(result.service.settings.url); // "https://api.example.com/v1/users"
- * console.log(result.service.settings.timeout); // 5000
+ * const result = resolveRefs(config);
+ * // result.services.auth.url = "https://api.prod.com/v2/auth"
+ * // result.services.auth.config.endpoint = "https://api.prod.com/v2/auth"
  * ```
+ * 
+ * @example
+ * Custom rules and tasks:
+ * ```ts
+ * const data = { users: ["Alice", "Bob"], items: [1, 2, 3] };
+ * const template = { 
+ *   userList: "$buildUserList",
+ *   summary: "$joinItems" 
+ * };
+ * 
+ * const rules = {
+ *   "$buildUserList": ["iterate", "$users", "user"],
+ *   "$joinItems": ["join", "$items", " + "]
+ * };
+ * 
+ * const extraTasks = {
+ *   format: (template: string, ...values: any[]) => 
+ *     template.replace(/{(\d+)}/g, (_, i) => values[i])
+ * };
+ * 
+ * const result = resolveRefs(template, data, rules, extraTasks);
+ * ```
+ * 
+ * ## Best Practices
+ * 
+ * 1. **Schema Organization**: Keep templates in a dedicated section (e.g., `templates/`)
+ * 2. **Reference Clarity**: Use descriptive paths like `config/database/url` vs `c/d/u`
+ * 3. **Template Design**: Use relative references in `"."` for dynamic template properties
+ * 4. **Performance**: Avoid deep circular references that could cause infinite loops
+ * 5. **Type Safety**: Consider using TypeScript interfaces for your schema structure
+ * 
+ * ## Error Handling
+ * 
+ * - Invalid references return the original reference string
+ * - Missing paths in schema return `undefined` 
+ * - Circular references are prevented through iteration limits
+ * - Type mismatches in string interpolation are converted to strings
  */
-export default (
-  object: any,
-  schema = JSON.parse(JSON.stringify(object)),
-  rules: Record<string, [string, ...any[]]> = {},
-  extraTasks: Record<string, Function> = {}
-): any => {
+export default function resolveRefs<T = any>(
+  object: ResolvableValue,
+  schema: Record<string, any> = JSON.parse(JSON.stringify(object)),
+  rules: ResolveRefsRules = {},
+  extraTasks: ResolveRefsTasks = {}
+): T {
     const processRules = (key: string): any => {
       if (!rules[key]) return undefined;
       const tasks: Record<string, Function> = {
@@ -283,5 +361,5 @@ export default (
       }
     }
     return loop(JSON.parse(JSON.stringify(object)));
-  };
+  }
 
