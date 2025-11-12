@@ -100,7 +100,7 @@
     "build:cjs": "tsc -p tsconfig.build.json",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build": "jest && rm -rf dist/* && npm run build:cjs && npm run build:esm && typedoc",
-    "release": "./release.sh --otp 000000",
+    "release": "./release.sh",
     "doc": "typedoc",
     "test": "jest --coverage",
     "test:e2e": "jest --config ./jest.config.e2e.ts --forceExit --verbose --detectOpenHandles --coverage --runInBand"
